@@ -4,11 +4,6 @@ class HomeArticleEntity with JsonConvert<HomeArticleEntity> {
   HomeArticleData data;
   int errorCode;
   String errorMsg;
-
-//  HomeArticleEntity.fromJson(Map<String, dynamic> json)
-//      : data = json['data'],
-//        errorCode = json['errorCode'],
-//        errorMsg = json['errorMsg'];
 }
 
 class HomeArticleData with JsonConvert<HomeArticleData> {

@@ -176,6 +176,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "webview_flutter",
+      "rootUri": "file:///Users/jere/Library/flutter/.pub-cache/hosted/pub.flutter-io.cn/webview_flutter-0.3.22+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "xml",
       "rootUri": "file:///Users/jere/Library/flutter/.pub-cache/hosted/pub.flutter-io.cn/xml-3.6.1",
       "packageUri": "lib/",
@@ -188,7 +194,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-07-27T09:02:15.493055Z",
+  "generated": "2020-07-28T08:47:14.538553Z",
   "generator": "pub",
   "generatorVersion": "2.8.4"
 }

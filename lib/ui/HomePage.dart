@@ -1,119 +1,76 @@
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
-import 'package:english_words/english_words.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
+import 'package:wanandroid_learning_flutter/ui/BrowserWebView.dart';
 
 class HomePage extends StatelessWidget {
-  _defaultTextStyle() {
-    return new TextStyle(fontSize: 20, color: Colors.blue);
-  }
-
-  void getHttp() async {
-    try {
-      Response response =
-          await Dio().get("https://www.wanandroid.com/article/list/2/json");
-      print(response);
-//      HomeArticleEntity homeArticleEntity = HomeArticleEntity(response.extra);
-      HomeArticleEntity homeArticleEntity = JsonConvert.fromJsonAsT(response.data);
-      print(homeArticleEntity.errorCode);
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-//    getHttp();
     return new Scaffold(
-      body: InfiniteListView(),
+      body: ArticleListView(),
     );
   }
 }
 
-class InfiniteListView extends StatefulWidget {
+class ArticleListView extends StatefulWidget {
   @override
-  _InfiniteListViewState createState() => new _InfiniteListViewState();
+  _ArticleListViewState createState() => new _ArticleListViewState();
 }
 
-class _InfiniteListViewState extends State<InfiniteListView> {
-  static const loadingTag = "##loading##"; //表尾标记
-//  var _words = <String>[loadingTag];
-  List<HomeArticleDataData> datas = new List();
+class _ArticleListViewState extends State<ArticleListView> {
+  List<HomeArticleDataData> articleData = new List();
+  int _pageNumber = 0;
 
   @override
   void initState() {
     super.initState();
-    _retrieveData();
+    _retrieveArticleData(_pageNumber);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: datas.length,
+    return ListView.builder(
+      itemCount: articleData.length,
       itemBuilder: (context, index) {
+        if(index == articleData.length - 1) {
+          _retrieveArticleData(_pageNumber++);
+          return Container(
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2,),
+            ),
+          );
+        }
 
-        _retrieveData();
-
-
-        //如果到了表尾
-//        if (datas[index] == loadingTag) {
-//          //不足100条，继续获取数据
-//          if (datas.length - 1 < 100) {
-//            //获取数据
-//            _retrieveData();
-//            //加载时显示loading
-//            return Container(
-//              padding: const EdgeInsets.all(16.0),
-//              alignment: Alignment.center,
-//              child: SizedBox(
-//                  width: 24.0,
-//                  height: 24.0,
-//                  child: CircularProgressIndicator(strokeWidth: 2.0)),
-//            );
-//          } else {
-//            //已经加载了100条数据，不再获取数据。
-//            return Container(
-//                alignment: Alignment.center,
-//                padding: EdgeInsets.all(16.0),
-//                child: Text(
-//                  "没有更多了",
-//                  style: TextStyle(color: Colors.grey),
-//                ));
-//          }
-//        }
-        //显示单词列表项
-        return _ListItemWidget(datas[index]);
+        return new GestureDetector(
+          child: _ListItemWidget(articleData[index]),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => BrowserWebView(articleData[index].link)));
+          },
+        );
       },
-      separatorBuilder: (context, index) => Divider(height: .0),
+      scrollDirection: Axis.vertical,
     );
   }
 
-//  void _retrieveData() {
-//    Future.delayed(Duration(seconds: 2)).then((e) {
-//      setState(() {
-//        //重新构建列表
-//        _words.insertAll(
-//            _words.length - 1,
-//            //每次生成20个单词
-//            generateWordPairs().take(20).map((e) => e.asPascalCase).toList());
-//      });
-//    });
-//  }
-
-  void _retrieveData() async {
+  void _retrieveArticleData(int pageNumber) async {
     try {
       Response response =
-      await Dio().get("https://www.wanandroid.com/article/list/2/json");
+          await Dio().get("https://www.wanandroid.com/article/list/$pageNumber/json");
       print(response);
-      HomeArticleEntity homeArticleEntity = JsonConvert.fromJsonAsT(response.data);
+      HomeArticleEntity homeArticleEntity =
+          JsonConvert.fromJsonAsT(response.data);
       setState(() {
-        for(HomeArticleDataData data in homeArticleEntity.data.datas) {
-          _ListItemWidget(data);
-        }
+        articleData.addAll(homeArticleEntity.data.datas);
       });
     } catch (e) {
       print(e);
@@ -121,10 +78,22 @@ class _InfiniteListViewState extends State<InfiniteListView> {
   }
 }
 
-class _ListItemWidget extends StatelessWidget {
+class _ListItemWidget extends StatefulWidget {
   HomeArticleDataData data;
 
   _ListItemWidget(HomeArticleDataData data) {
+    this.data = data;
+  }
+
+  @override
+  _ListItemWidgetState createState() => new _ListItemWidgetState(data);
+}
+
+class _ListItemWidgetState extends State<_ListItemWidget> {
+  HomeArticleDataData data;
+  IconData _isCollectedIcon = Icons.favorite_border;
+
+  _ListItemWidgetState(HomeArticleDataData data) {
     this.data = data;
   }
 
@@ -136,7 +105,7 @@ class _ListItemWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         new Padding(
-          padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+          padding: EdgeInsets.only(left: 10, top: 12, bottom: 10),
           child: new Text(
             data.title,
             style: TextStyle(fontSize: 15, color: Colors.black),
@@ -150,15 +119,19 @@ class _ListItemWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             new Padding(
-              padding: EdgeInsets.only(left: 10, top: 2),
-              child: new Text(
-                data.author,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
+                padding: EdgeInsets.only(left: 10, top: 10),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 60,
+                  ),
+                  child: new Text(
+                    data.author.isEmpty ? data.shareUser : data.author,
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                )),
             new Expanded(
               child: new Container(
-                padding: EdgeInsets.only(left: 15, top: 2),
+                padding: EdgeInsets.only(left: 15, top: 10),
                 child: new Text(
                   data.niceDate,
                   style: TextStyle(fontSize: 15, color: Colors.black),
@@ -167,12 +140,28 @@ class _ListItemWidget extends StatelessWidget {
             ),
             new Padding(
               padding: EdgeInsets.only(right: 10),
-              child: new Icon(
-                Icons.favorite,
-                color: Colors.red,
+              child: new IconButton(
+                alignment: Alignment.topCenter,
+                color: Colors.yellowAccent,
+                icon: new Icon(
+                  _isCollectedIcon,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  print("jereTest print iconButton");
+//                  setState() {
+//                    _isCollectedIcon = Icons.favorite;
+//                  }
+                  _isCollectedIcon = Icons.favorite;
+                },
               ),
             ),
           ],
+        ),
+        new Container(
+          color: Colors.grey,
+          width: MediaQuery.of(context).size.width,
+          height: 1,
         ),
       ],
     );
