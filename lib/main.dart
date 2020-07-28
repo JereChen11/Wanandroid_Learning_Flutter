@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wanandroid_learning_flutter/ui/HomePage.dart';
 import 'package:wanandroid_learning_flutter/ui/KnowledgeSystemPage.dart';
 import 'package:wanandroid_learning_flutter/ui/MePage.dart';
@@ -6,6 +9,14 @@ import 'package:wanandroid_learning_flutter/ui/ProjectPage.dart';
 import 'package:wanandroid_learning_flutter/ui/WeChatPage.dart';
 
 void main() {
+  //android 沉浸式状态栏
+  if(Platform.isAndroid){
+    SystemUiOverlayStyle style = SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light
+    );
+    SystemChrome.setSystemUIOverlayStyle(style);
+  }
   runApp(MyApp());
 }
 

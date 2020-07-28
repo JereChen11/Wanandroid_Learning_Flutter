@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wanandroid_learning_flutter/ui/LoginPage.dart';
 
 class MePage extends StatelessWidget {
   @override
@@ -15,43 +16,49 @@ class MePage extends StatelessWidget {
             new Container(
               color: Colors.blue,
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 5,
+              height: MediaQuery.of(context).size.height / 4.5,
               child: Image(
                 image: AssetImage("assets/images/landscape.jpg"),
-                fit: BoxFit.fill,
+                fit: BoxFit.fitWidth,
               ),
             ),
             new Positioned(
-              top: 50,
-              child: new Column(
-                children: <Widget>[
-                  new Container(
-                    width: 120,
-                    height: 120,
-                    margin: EdgeInsets.only(top: 10),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/landscape.jpg"),
-                        fit: BoxFit.fill,
+              top: 40,
+              child: new GestureDetector(
+                child: new Column(
+                  children: <Widget>[
+                    new Container(
+                      width: 120,
+                      height: 120,
+                      margin: EdgeInsets.only(top: 10),
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/landscape.jpg"),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                  new Text(
-                    "JereChen",
-                    style: TextStyle(fontSize: 25, color: Colors.black38),
-                  ),
-                  new Text(
-                    "jerechen11@gmail.com",
-                    style: TextStyle(fontSize: 18, color: Colors.black38),
-                  ),
-                  new Container(
-                    width: 250,
-                    height: 1,
-                    color: Colors.grey,
-                    margin: EdgeInsets.only(top: 8),
-                  )
-                ],
+                    new Text(
+                      "JereChen",
+                      style: TextStyle(fontSize: 25, color: Colors.black38),
+                    ),
+                    new Text(
+                      "jerechen11@gmail.com",
+                      style: TextStyle(fontSize: 18, color: Colors.black38),
+                    ),
+                    new Container(
+                      width: 250,
+                      height: 1,
+                      color: Colors.grey,
+                      margin: EdgeInsets.only(top: 8),
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                },
               ),
             ),
           ],
