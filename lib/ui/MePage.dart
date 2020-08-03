@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/ui/LoginPage.dart';
+import 'package:wanandroid_learning_flutter/utils/Constant.dart';
+import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
 
 class MePage extends StatelessWidget {
   @override
@@ -40,7 +42,7 @@ class MePage extends StatelessWidget {
                       ),
                     ),
                     new Text(
-                      "JereChen",
+                      SpUtil().getString(Constant.usernameTag),
                       style: TextStyle(fontSize: 25, color: Colors.black38),
                     ),
                     new Text(

@@ -7,8 +7,13 @@ import 'package:wanandroid_learning_flutter/ui/KnowledgeSystemPage.dart';
 import 'package:wanandroid_learning_flutter/ui/MePage.dart';
 import 'package:wanandroid_learning_flutter/ui/ProjectPage.dart';
 import 'package:wanandroid_learning_flutter/ui/WeChatPage.dart';
+import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await SpUtil().init();
+
   //android 沉浸式状态栏
   if(Platform.isAndroid){
     SystemUiOverlayStyle style = SystemUiOverlayStyle(
@@ -17,6 +22,7 @@ void main() {
     );
     SystemChrome.setSystemUIOverlayStyle(style);
   }
+
   runApp(MyApp());
 }
 
