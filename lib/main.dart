@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:wanandroid_learning_flutter/ui/HomePage.dart';
 import 'package:wanandroid_learning_flutter/ui/KnowledgeSystemPage.dart';
 import 'package:wanandroid_learning_flutter/ui/MePage.dart';
-import 'package:wanandroid_learning_flutter/ui/ProjectPage.dart';
+import 'package:wanandroid_learning_flutter/ui/completeproject/ProjectPage.dart';
 import 'package:wanandroid_learning_flutter/ui/WeChatPage.dart';
 import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
 
