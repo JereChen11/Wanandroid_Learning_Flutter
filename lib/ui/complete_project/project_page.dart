@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/completeproject/CompleteProjectListPage.dart';
+import 'package:wanandroid_learning_flutter/ui/complete_project/complete_project_list_page.dart';
 
 class ProjectPage extends StatelessWidget {
   @override
@@ -46,7 +46,7 @@ class _ProjectCategoryState extends State<ProjectCategoryWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CompleteProjectListPage(projectCategoryData.id)));
+                        CompleteProjectListPage(projectCategoryData)));
           },
         ));
       }

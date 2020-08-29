@@ -5,9 +5,82 @@ import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_con
 import 'package:wanandroid_learning_flutter/model/blogger_list_entity.dart';
 import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
 
-class WeChatPage extends StatelessWidget {
+class WeChatPage extends StatefulWidget {
+  @override
+  _WeChatPageState createState() => _WeChatPageState();
+}
+
+class _WeChatPageState extends State<WeChatPage> {
+  List<HomeArticleDataData> _articleList = List();
+  int _currentBloggerId = 408; //鸿洋
+  bool _isLoadAllArticles = false;
+
+  @override
+  void initState() {
+    _retrieveArticleListData(0, _currentBloggerId);
+    super.initState();
+  }
+
+  void _retrieveArticleListData(int pageNumber, int bloggerId) {
+    Future<HomeArticleEntity> articleEntityFuture =
+        getArticleListData(pageNumber, bloggerId);
+
+    articleEntityFuture.then((value) => {
+          if (value.errorCode == 0 && value.data.datas.length > 0)
+            {
+              setState(() {
+                _articleList.clear();
+                _articleList.addAll(value.data.datas);
+                _isLoadAllArticles = false;
+              })
+            }
+          else
+            {
+              setState(() {
+                _isLoadAllArticles = true;
+                print("jeretest _isLoadAllArticles = $_isLoadAllArticles");
+              })
+            }
+        });
+  }
+
+  Future<HomeArticleEntity> getArticleListData(
+      int pageNumber, int bloggerId) async {
+    try {
+      Response response = await Dio().get(
+          "https://wanandroid.com/wxarticle/list/$bloggerId/$pageNumber/json");
+      print("getArticleListData = $response");
+      HomeArticleEntity articleEntity = JsonConvert.fromJsonAsT(response.data);
+      return articleEntity;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _loadMoreData(int pageNumber, int bloggerId) {
+    Future<HomeArticleEntity> articleEntityFuture =
+        getArticleListData(pageNumber, bloggerId);
+    articleEntityFuture.then((value) => {
+          if (value.errorCode == 0 && value.data.datas.length > 0)
+            {
+              setState(() {
+                _articleList.addAll(value.data.datas);
+                _isLoadAllArticles = false;
+              })
+            }
+          else
+            {
+              setState(() {
+                _isLoadAllArticles = true;
+                print("jeretest _isLoadAllArticles = $_isLoadAllArticles");
+              })
+            }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("_WeChatPageState build isLoadAllArticles = $_isLoadAllArticles");
     return new Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -16,25 +89,50 @@ class WeChatPage extends StatelessWidget {
         new Container(
           width: MediaQuery.of(context).size.width,
           height: 60,
-          child: _BloggerList(),
+          child: BloggerList(
+            onSelectedChange: (int bloggerId) {
+              print("WeChatPage onSelectedChange bloggerId = $bloggerId");
+              _currentBloggerId = bloggerId;
+              _retrieveArticleListData(0, bloggerId);
+            },
+          ),
         ),
         new Expanded(
-          child: _BlogArticleList(),
+          child: BlogArticleList(
+            loadMoreData: (int pageNumber) {
+              print("loadMoreData pageNumber = $pageNumber");
+              _loadMoreData(pageNumber, _currentBloggerId);
+            },
+            articleList: _articleList,
+            isLoadAllArticles: _isLoadAllArticles,
+          ),
         ),
       ],
     );
   }
 }
 
-class _BloggerList extends StatefulWidget {
+class BloggerList extends StatefulWidget {
+  final Function(int) onSelectedChange;
+  List<BloggerListData> bloggerList = List();
+
+  BloggerList({Key key, this.onSelectedChange}) : super(key: key);
+
   @override
-  _BloggerListSate createState() => _BloggerListSate();
+  _BloggerListSate createState() => _BloggerListSate(onSelectedChange);
 }
 
-class _BloggerListSate extends State<_BloggerList> {
+class _BloggerListSate extends State<BloggerList> {
   List<BloggerListData> _bloggerList = List();
   bool _isLoadAllBloggerData = false;
   int _selectedIndex = 0;
+
+  Function(int) onSelectedChange;
+
+  _BloggerListSate(Function(int) onSelectedChange) {
+    this.onSelectedChange = onSelectedChange;
+    print("BloggerList length = $_bloggerList.length");
+  }
 
   void _retrieveBloggerListData() async {
     try {
@@ -94,7 +192,7 @@ class _BloggerListSate extends State<_BloggerList> {
                 });
                 print("jeretest gestureDetector ontap: $index");
                 print("jeretest onTap _blogId = ${_bloggerList[index].id}");
-                _BlogArticleListState(_bloggerList[index].id);
+                onSelectedChange(_bloggerList[index].id);
               },
               child: new Container(
                 alignment: Alignment.center,
@@ -118,7 +216,9 @@ class _BloggerListSate extends State<_BloggerList> {
                           new Container(
                             width: 100,
                             height: 3,
-                            color: (index == _selectedIndex) ? Colors.blue : Colors.transparent,
+                            color: (index == _selectedIndex)
+                                ? Colors.blue
+                                : Colors.transparent,
                             alignment: Alignment.bottomCenter,
                           )
                         ],
@@ -135,47 +235,37 @@ class _BloggerListSate extends State<_BloggerList> {
   }
 }
 
-class _BlogArticleList extends StatefulWidget {
+class BlogArticleList extends StatefulWidget {
+  final Function(int) loadMoreData;
+  List<HomeArticleDataData> articleList = List();
+  bool isLoadAllArticles;
+
+  BlogArticleList(
+      {Key key, this.loadMoreData, this.articleList, this.isLoadAllArticles})
+      : super(key: key);
+
   @override
-  _BlogArticleListState createState() => _BlogArticleListState(408);
+  _BlogArticleListState createState() =>
+      _BlogArticleListState(loadMoreData, articleList, isLoadAllArticles);
 }
 
-class _BlogArticleListState extends State<_BlogArticleList> {
-  List<HomeArticleDataData> _articleList = List();
+class _BlogArticleListState extends State<BlogArticleList> {
+  Function(int) loadMoreData;
+  List<HomeArticleDataData> articleList = List();
   IconData _isCollectedIcon = Icons.favorite;
   int _pageNumber = 0;
-  int _bloggerId = 408; //default value is 鸿洋
+  bool isLoadAllArticles;
 
-  void refreshUi(int blogId) {
-    this._bloggerId = blogId;
-    _retrieveArticleListData(blogId);
-  }
-
-  _BlogArticleListState(int blogId) {
-    this._bloggerId = blogId;
-    print("jeretest _blogId = $_bloggerId");
-  }
-
-  void _retrieveArticleListData(int blogId) async {
-    try {
-      Response response = await Dio().get(
-          "https://wanandroid.com/wxarticle/list/$_bloggerId/$_pageNumber/json");
-      print("retrieve article List dtaa = $response");
-      HomeArticleEntity articleEntity = JsonConvert.fromJsonAsT(response.data);
-      if (articleEntity.errorCode == 0) {
-        _articleList.addAll(articleEntity.data.datas);
-        _pageNumber++;
-        setState(() {});
-      }
-    } catch (e) {
-      print(e);
-    }
+  _BlogArticleListState(Function(int) loadMoreData,
+      List<HomeArticleDataData> articleList, bool isLoadAllArticles) {
+    this.loadMoreData = loadMoreData;
+    this.articleList = articleList;
+    this.isLoadAllArticles = isLoadAllArticles;
   }
 
   @override
   void initState() {
     print("jereTest _BlogArticleListState");
-    _retrieveArticleListData(_bloggerId);
     super.initState();
   }
 
@@ -184,23 +274,33 @@ class _BlogArticleListState extends State<_BlogArticleList> {
     print("jereTest _BlogArticleListState build");
     return new ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: _articleList.length,
+      itemCount: articleList.length,
       itemBuilder: (context, index) {
-        if (index == _articleList.length - 1) {
+        if (index == articleList.length - 1) {
           //加载了所有数据后，不必再去请求服务器，这时候也不应该展示 loading, 而是展示"所有文章都已被加载"
-          _retrieveArticleListData(_bloggerId);
+          loadMoreData(_pageNumber++);
+
           return Container(
             padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
             child: new Column(
               children: <Widget>[
-                new SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                new Visibility(
+                  child: new SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
                   ),
+                  visible: !isLoadAllArticles,
                 ),
+                new Visibility(
+                  child: Text(
+                    "所有文章都已被加载",
+                  ),
+                  visible: isLoadAllArticles,
+                )
               ],
             ),
           );
@@ -220,7 +320,7 @@ class _BlogArticleListState extends State<_BlogArticleList> {
                   new Padding(
                     padding: EdgeInsets.only(left: 10, top: 12, bottom: 10),
                     child: new Text(
-                      _articleList[index].title,
+                      articleList[index].title,
                       style: TextStyle(fontSize: 15, color: Colors.black),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -238,9 +338,9 @@ class _BlogArticleListState extends State<_BlogArticleList> {
                               minWidth: 60,
                             ),
                             child: new Text(
-                              _articleList[index].author.isEmpty
-                                  ? _articleList[index].shareUser
-                                  : _articleList[index].author,
+                              articleList[index].author.isEmpty
+                                  ? articleList[index].shareUser
+                                  : articleList[index].author,
                               style:
                                   TextStyle(fontSize: 15, color: Colors.black),
                             ),
@@ -249,7 +349,7 @@ class _BlogArticleListState extends State<_BlogArticleList> {
                         child: new Container(
                           padding: EdgeInsets.only(left: 15, top: 10),
                           child: new Text(
-                            _articleList[index].niceDate,
+                            articleList[index].niceDate,
                             style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
                         ),
@@ -265,9 +365,6 @@ class _BlogArticleListState extends State<_BlogArticleList> {
                           ),
                           onPressed: () {
                             print("jereTest print iconButton");
-//                  setState() {
-//                    _isCollectedIcon = Icons.favorite;
-//                  }
                             _isCollectedIcon = Icons.favorite;
                           },
                         ),

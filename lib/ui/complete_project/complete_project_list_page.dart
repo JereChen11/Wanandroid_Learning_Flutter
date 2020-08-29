@@ -3,28 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
+import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
 import 'package:wanandroid_learning_flutter/ui/BrowserWebView.dart';
 
 class CompleteProjectListPage extends StatefulWidget {
-  int _projectId;
+  ProjectCategoryData _projectCategoryData;
 
-  CompleteProjectListPage(int projectId) {
-    this._projectId = projectId;
+  CompleteProjectListPage(ProjectCategoryData projectCategoryData) {
+    this._projectCategoryData = projectCategoryData;
   }
 
   @override
   _CompleteProjectListPageState createState() =>
-      _CompleteProjectListPageState(_projectId);
+      _CompleteProjectListPageState(_projectCategoryData);
 }
 
 class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
   List<HomeArticleDataData> _articleData = List();
-  int _projectId;
+  ProjectCategoryData _projectCategoryData;
   int _pageNumber = 0;
   bool _isNotLoadAllData = true;
 
-  _CompleteProjectListPageState(int projectId) {
-    this._projectId = projectId;
+  _CompleteProjectListPageState(ProjectCategoryData projectCategoryData) {
+    this._projectCategoryData = projectCategoryData;
   }
 
   void _retrieveArticleData(int pageNumber, int projectId) async {
@@ -52,7 +53,7 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
 
   @override
   void initState() {
-    _retrieveArticleData(_pageNumber, _projectId);
+    _retrieveArticleData(_pageNumber, _projectCategoryData.id);
     super.initState();
   }
 
@@ -60,7 +61,8 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("完整项目列表"),
+        title: Text(_projectCategoryData.name),
+        centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: _articleData.length,
@@ -68,7 +70,7 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
           if (index == _articleData.length - 1) {
             //加载了所有数据后，不必再去请求服务器，这时候也不应该展示 loading, 而是展示"所有文章都已被加载"
             if (_isNotLoadAllData) {
-              _retrieveArticleData(_pageNumber, _projectId);
+              _retrieveArticleData(_pageNumber, _projectCategoryData.id);
             }
             return Container(
               padding: const EdgeInsets.all(16),
