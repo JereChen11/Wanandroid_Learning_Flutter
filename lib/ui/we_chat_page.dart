@@ -279,6 +279,7 @@ class _BlogArticleListState extends State<BlogArticleList> {
         if (index == articleList.length - 1) {
           //加载了所有数据后，不必再去请求服务器，这时候也不应该展示 loading, 而是展示"所有文章都已被加载"
           loadMoreData(_pageNumber++);
+          loadMoreData(_pageNumber++);
 
           return Container(
             padding: const EdgeInsets.all(16),
