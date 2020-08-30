@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroid_learning_flutter/ui/HomePage.dart';
-import 'package:wanandroid_learning_flutter/ui/KnowledgeSystemPage.dart';
+import 'package:wanandroid_learning_flutter/ui/knowledge_system_page.dart';
 import 'package:wanandroid_learning_flutter/ui/MePage.dart';
 import 'package:wanandroid_learning_flutter/ui/complete_project/project_page.dart';
 import 'package:wanandroid_learning_flutter/ui/we_chat_page.dart';
