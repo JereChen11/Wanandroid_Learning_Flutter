@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wanandroid_learning_flutter/res/strings.dart';
+import 'package:wanandroid_learning_flutter/res/text_styles.dart';
 import 'package:wanandroid_learning_flutter/ui/HomePage.dart';
 import 'package:wanandroid_learning_flutter/ui/knowledge_system_page.dart';
 import 'package:wanandroid_learning_flutter/ui/MePage.dart';
 import 'package:wanandroid_learning_flutter/ui/complete_project/project_page.dart';
 import 'package:wanandroid_learning_flutter/ui/we_chat_page.dart';
-import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
+import 'package:wanandroid_learning_flutter/res/colours.dart';
+import 'package:wanandroid_learning_flutter/utils/constant.dart';
+import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
 void main() async {
 
@@ -63,23 +67,23 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   final List<Widget> _appBar = [
     AppBar(
       centerTitle: true,
-      title: Text("主页"),
+      title: Text(Strings.home_cn),
     ),
     AppBar(
       centerTitle: true,
-      title: Text("完整项目"),
+      title: Text(Strings.complete_project_cn),
     ),
     AppBar(
       centerTitle: true,
-      title: Text("微信公众号"),
+      title: Text(Strings.complete_project_cn),
     ),
     AppBar(
       centerTitle: true,
-      title: Text("知识体系"),
+      title: Text(Strings.knowledge_system_cn),
     ),
     AppBar(
       centerTitle: true,
-      title: Text("我的"),
+      title: Text(Strings.me_cn),
     ),
   ];
 
@@ -87,6 +91,117 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: _appBar[_currentIndex],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: new GestureDetector(
+                child: new Column(
+                  children: <Widget>[
+                    new Container(
+                      width: 80,
+                      height: 80,
+                      margin: EdgeInsets.only(top: 10),
+                      child: SpUtil().getString(Constant.avatarPathTag) == null
+                          ? CircleAvatar(
+                        backgroundImage:
+                        AssetImage("assets/images/landscape.jpg"),
+                      )
+                          : Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: FileImage(File(SpUtil()
+                                .getString(Constant.avatarPathTag))),
+                          ),
+                        ),
+                      ),
+                    ),
+                    new Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        SpUtil().getString(Constant.usernameTag) == null
+                            ? "username"
+                            : SpUtil().getString(Constant.usernameTag),
+                        style: TextStyle(fontSize: 25, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+//                  Navigator.push(context,
+//                      MaterialPageRoute(builder: (context) => ProfilePage()));
+                },
+              ),
+              decoration: BoxDecoration(
+                color: Colours.app_theme,
+              ),
+            ),
+            ListTile(
+              title: Text(
+                Strings.home_cn,
+                style: TextStyles.size18AndBoldText,
+              ),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 0;
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                Strings.complete_project_cn,
+                style: TextStyles.size18AndBoldText,
+              ),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 1;
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                Strings.we_chat_cn,
+                style: TextStyles.size18AndBoldText,
+              ),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 2;
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                Strings.knowledge_system_cn,
+                style: TextStyles.size18AndBoldText,
+              ),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 3;
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                Strings.me_cn,
+                style: TextStyles.size18AndBoldText,
+              ),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 4;
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -95,7 +210,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              "主页",
+              Strings.home_cn,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -105,7 +220,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              "完整项目",
+              Strings.complete_project_cn,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -115,7 +230,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              "微信公众号",
+              Strings.we_chat_cn,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -125,7 +240,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              "知识体系",
+              Strings.knowledge_system_cn,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -135,7 +250,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              "我的",
+              Strings.me_cn,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),

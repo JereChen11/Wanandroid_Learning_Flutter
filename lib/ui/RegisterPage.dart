@@ -5,8 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/main.dart';
 import 'package:wanandroid_learning_flutter/model/login_entity.dart';
-import 'package:wanandroid_learning_flutter/utils/Constant.dart';
-import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
+import 'package:wanandroid_learning_flutter/utils/constant.dart';
+import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
 class RegisterPage extends StatefulWidget {
   @override

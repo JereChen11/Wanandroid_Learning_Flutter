@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/ui/LoginPage.dart';
-import 'package:wanandroid_learning_flutter/utils/Constant.dart';
-import 'package:wanandroid_learning_flutter/utils/SpUtil.dart';
+import 'package:wanandroid_learning_flutter/utils/constant.dart';
+import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
 class MePage extends StatelessWidget {
   @override
