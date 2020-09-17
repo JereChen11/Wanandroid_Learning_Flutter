@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/res/text_styles.dart';
-import 'package:wanandroid_learning_flutter/ui/HomePage.dart';
+import 'package:wanandroid_learning_flutter/ui/home_page.dart';
 import 'package:wanandroid_learning_flutter/ui/knowledge_system_page.dart';
-import 'package:wanandroid_learning_flutter/ui/MePage.dart';
+import 'package:wanandroid_learning_flutter/ui/me_page.dart';
 import 'package:wanandroid_learning_flutter/ui/complete_project/project_page.dart';
 import 'package:wanandroid_learning_flutter/ui/we_chat_page.dart';
 import 'package:wanandroid_learning_flutter/res/colours.dart';
@@ -14,16 +14,14 @@ import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await SpUtil().init();
 
   //android 沉浸式状态栏
-  if(Platform.isAndroid){
+  if (Platform.isAndroid) {
     SystemUiOverlayStyle style = SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light
-    );
+        statusBarIconBrightness: Brightness.light);
     SystemChrome.setSystemUIOverlayStyle(style);
   }
 
@@ -89,38 +87,37 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: _appBar[_currentIndex],
+    return Scaffold(
+//      appBar: _appBar[_currentIndex],
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: new GestureDetector(
-                child: new Column(
+              child: GestureDetector(
+                child: Column(
                   children: <Widget>[
-                    new Container(
-                      width: 80,
-                      height: 80,
-                      margin: EdgeInsets.only(top: 10),
+                    Container(
+                      width: 100,
+                      height: 100,
                       child: SpUtil().getString(Constant.avatarPathTag) == null
                           ? CircleAvatar(
-                        backgroundImage:
-                        AssetImage("assets/images/landscape.jpg"),
-                      )
+                              backgroundImage:
+                                  AssetImage("assets/images/landscape.jpg"),
+                            )
                           : Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: FileImage(File(SpUtil()
-                                .getString(Constant.avatarPathTag))),
-                          ),
-                        ),
-                      ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: FileImage(File(SpUtil()
+                                      .getString(Constant.avatarPathTag))),
+                                ),
+                              ),
+                            ),
                     ),
-                    new Padding(
-                      padding: EdgeInsets.only(top: 10),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5),
                       child: Text(
                         SpUtil().getString(Constant.usernameTag) == null
                             ? "username"
@@ -136,13 +133,19 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                 },
               ),
               decoration: BoxDecoration(
-                color: Colours.app_theme,
+                color: Colors.grey,
+                image: new DecorationImage(
+                    image: AssetImage("assets/images/landscape.jpg"),
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.7), BlendMode.dstATop),
+                    fit: BoxFit.cover),
               ),
             ),
             ListTile(
               title: Text(
                 Strings.home_cn,
                 style: TextStyles.size18AndBoldText,
+                textAlign: TextAlign.center,
               ),
               onTap: () {
                 setState(() {
@@ -155,6 +158,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               title: Text(
                 Strings.complete_project_cn,
                 style: TextStyles.size18AndBoldText,
+                textAlign: TextAlign.center,
               ),
               onTap: () {
                 setState(() {
@@ -167,6 +171,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               title: Text(
                 Strings.we_chat_cn,
                 style: TextStyles.size18AndBoldText,
+                textAlign: TextAlign.center,
               ),
               onTap: () {
                 setState(() {
@@ -179,6 +184,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               title: Text(
                 Strings.knowledge_system_cn,
                 style: TextStyles.size18AndBoldText,
+                textAlign: TextAlign.center,
               ),
               onTap: () {
                 setState(() {
@@ -191,6 +197,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               title: Text(
                 Strings.me_cn,
                 style: TextStyles.size18AndBoldText,
+                textAlign: TextAlign.center,
               ),
               onTap: () {
                 setState(() {
@@ -255,6 +262,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
           ),
         ],
+        selectedItemColor: Colours.app_theme,
+        selectedLabelStyle: TextStyle(color: Colours.app_theme),
         currentIndex: _currentIndex,
         onTap: (int index) {
           setState(() {

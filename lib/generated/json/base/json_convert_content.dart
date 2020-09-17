@@ -15,84 +15,148 @@ import 'package:wanandroid_learning_flutter/model/login_entity.dart';
 import 'package:wanandroid_learning_flutter/generated/json/login_entity_helper.dart';
 
 class JsonConvert<T> {
-	T fromJson(Map<String, dynamic> json) {
-		return _getFromJson<T>(runtimeType, this, json);
-	}
+  T fromJson(Map<String, dynamic> json) {
+    return _getFromJson<T>(runtimeType, this, json);
+  }
 
   Map<String, dynamic> toJson() {
-		return _getToJson<T>(runtimeType, this);
+    return _getToJson<T>(runtimeType, this);
   }
 
   static _getFromJson<T>(Type type, data, json) {
-    switch (type) {			case BloggerListEntity:
-			return bloggerListEntityFromJson(data as BloggerListEntity, json) as T;			case BloggerListData:
-			return bloggerListDataFromJson(data as BloggerListData, json) as T;			case ProjectCategoryEntity:
-			return projectCategoryEntityFromJson(data as ProjectCategoryEntity, json) as T;			case ProjectCategoryData:
-			return projectCategoryDataFromJson(data as ProjectCategoryData, json) as T;			case HomeArticleEntity:
-			return homeArticleEntityFromJson(data as HomeArticleEntity, json) as T;			case HomeArticleData:
-			return homeArticleDataFromJson(data as HomeArticleData, json) as T;			case HomeArticleDataData:
-			return homeArticleDataDataFromJson(data as HomeArticleDataData, json) as T;			case HomeArticleDataDatasTag:
-			return homeArticleDataDatasTagFromJson(data as HomeArticleDataDatasTag, json) as T;			case KnowledgeSystemEntity:
-			return knowledgeSystemEntityFromJson(data as KnowledgeSystemEntity, json) as T;			case KnowledgeSystemData:
-			return knowledgeSystemDataFromJson(data as KnowledgeSystemData, json) as T;			case KnowledgeSystemDatachild:
-			return knowledgeSystemDatachildFromJson(data as KnowledgeSystemDatachild, json) as T;			case LoginEntity:
-			return loginEntityFromJson(data as LoginEntity, json) as T;			case LoginData:
-			return loginDataFromJson(data as LoginData, json) as T;    }
+    switch (type) {
+      case BloggerListEntity:
+        return bloggerListEntityFromJson(data as BloggerListEntity, json) as T;
+      case BloggerListData:
+        return bloggerListDataFromJson(data as BloggerListData, json) as T;
+      case ProjectCategoryEntity:
+        return projectCategoryEntityFromJson(
+            data as ProjectCategoryEntity, json) as T;
+      case ProjectCategoryData:
+        return projectCategoryDataFromJson(data as ProjectCategoryData, json)
+            as T;
+      case HomeArticleEntity:
+        return homeArticleEntityFromJson(data as HomeArticleEntity, json) as T;
+      case HomeArticleData:
+        return homeArticleDataFromJson(data as HomeArticleData, json) as T;
+      case HomeArticleDataData:
+        return homeArticleDataDataFromJson(data as HomeArticleDataData, json)
+            as T;
+      case HomeArticleDataDatasTag:
+        return homeArticleDataDatasTagFromJson(
+            data as HomeArticleDataDatasTag, json) as T;
+      case KnowledgeSystemEntity:
+        return knowledgeSystemEntityFromJson(
+            data as KnowledgeSystemEntity, json) as T;
+      case KnowledgeSystemData:
+        return knowledgeSystemDataFromJson(data as KnowledgeSystemData, json)
+            as T;
+      case KnowledgeSystemDatachild:
+        return knowledgeSystemDatachildFromJson(
+            data as KnowledgeSystemDatachild, json) as T;
+      case LoginEntity:
+        return loginEntityFromJson(data as LoginEntity, json) as T;
+      case LoginData:
+        return loginDataFromJson(data as LoginData, json) as T;
+    }
     return data as T;
   }
 
   static _getToJson<T>(Type type, data) {
-		switch (type) {			case BloggerListEntity:
-			return bloggerListEntityToJson(data as BloggerListEntity);			case BloggerListData:
-			return bloggerListDataToJson(data as BloggerListData);			case ProjectCategoryEntity:
-			return projectCategoryEntityToJson(data as ProjectCategoryEntity);			case ProjectCategoryData:
-			return projectCategoryDataToJson(data as ProjectCategoryData);			case HomeArticleEntity:
-			return homeArticleEntityToJson(data as HomeArticleEntity);			case HomeArticleData:
-			return homeArticleDataToJson(data as HomeArticleData);			case HomeArticleDataData:
-			return homeArticleDataDataToJson(data as HomeArticleDataData);			case HomeArticleDataDatasTag:
-			return homeArticleDataDatasTagToJson(data as HomeArticleDataDatasTag);			case KnowledgeSystemEntity:
-			return knowledgeSystemEntityToJson(data as KnowledgeSystemEntity);			case KnowledgeSystemData:
-			return knowledgeSystemDataToJson(data as KnowledgeSystemData);			case KnowledgeSystemDatachild:
-			return knowledgeSystemDatachildToJson(data as KnowledgeSystemDatachild);			case LoginEntity:
-			return loginEntityToJson(data as LoginEntity);			case LoginData:
-			return loginDataToJson(data as LoginData);    }
+    switch (type) {
+      case BloggerListEntity:
+        return bloggerListEntityToJson(data as BloggerListEntity);
+      case BloggerListData:
+        return bloggerListDataToJson(data as BloggerListData);
+      case ProjectCategoryEntity:
+        return projectCategoryEntityToJson(data as ProjectCategoryEntity);
+      case ProjectCategoryData:
+        return projectCategoryDataToJson(data as ProjectCategoryData);
+      case HomeArticleEntity:
+        return homeArticleEntityToJson(data as HomeArticleEntity);
+      case HomeArticleData:
+        return homeArticleDataToJson(data as HomeArticleData);
+      case HomeArticleDataData:
+        return homeArticleDataDataToJson(data as HomeArticleDataData);
+      case HomeArticleDataDatasTag:
+        return homeArticleDataDatasTagToJson(data as HomeArticleDataDatasTag);
+      case KnowledgeSystemEntity:
+        return knowledgeSystemEntityToJson(data as KnowledgeSystemEntity);
+      case KnowledgeSystemData:
+        return knowledgeSystemDataToJson(data as KnowledgeSystemData);
+      case KnowledgeSystemDatachild:
+        return knowledgeSystemDatachildToJson(data as KnowledgeSystemDatachild);
+      case LoginEntity:
+        return loginEntityToJson(data as LoginEntity);
+      case LoginData:
+        return loginDataToJson(data as LoginData);
+    }
     return data as T;
   }
+
   //Go back to a single instance by type
   static _fromJsonSingle(String type, json) {
-    switch (type) {			case 'BloggerListEntity':
-			return BloggerListEntity().fromJson(json);			case 'BloggerListData':
-			return BloggerListData().fromJson(json);			case 'ProjectCategoryEntity':
-			return ProjectCategoryEntity().fromJson(json);			case 'ProjectCategoryData':
-			return ProjectCategoryData().fromJson(json);			case 'HomeArticleEntity':
-			return HomeArticleEntity().fromJson(json);			case 'HomeArticleData':
-			return HomeArticleData().fromJson(json);			case 'HomeArticleDataData':
-			return HomeArticleDataData().fromJson(json);			case 'HomeArticleDataDatasTag':
-			return HomeArticleDataDatasTag().fromJson(json);			case 'KnowledgeSystemEntity':
-			return KnowledgeSystemEntity().fromJson(json);			case 'KnowledgeSystemData':
-			return KnowledgeSystemData().fromJson(json);			case 'KnowledgeSystemDatachild':
-			return KnowledgeSystemDatachild().fromJson(json);			case 'LoginEntity':
-			return LoginEntity().fromJson(json);			case 'LoginData':
-			return LoginData().fromJson(json);    }
+    switch (type) {
+      case 'BloggerListEntity':
+        return BloggerListEntity().fromJson(json);
+      case 'BloggerListData':
+        return BloggerListData().fromJson(json);
+      case 'ProjectCategoryEntity':
+        return ProjectCategoryEntity().fromJson(json);
+      case 'ProjectCategoryData':
+        return ProjectCategoryData().fromJson(json);
+      case 'HomeArticleEntity':
+        return HomeArticleEntity().fromJson(json);
+      case 'HomeArticleData':
+        return HomeArticleData().fromJson(json);
+      case 'HomeArticleDataData':
+        return HomeArticleDataData().fromJson(json);
+      case 'HomeArticleDataDatasTag':
+        return HomeArticleDataDatasTag().fromJson(json);
+      case 'KnowledgeSystemEntity':
+        return KnowledgeSystemEntity().fromJson(json);
+      case 'KnowledgeSystemData':
+        return KnowledgeSystemData().fromJson(json);
+      case 'KnowledgeSystemDatachild':
+        return KnowledgeSystemDatachild().fromJson(json);
+      case 'LoginEntity':
+        return LoginEntity().fromJson(json);
+      case 'LoginData':
+        return LoginData().fromJson(json);
+    }
     return null;
   }
 
   //empty list is returned by type
   static _getListFromType(String type) {
-    switch (type) {			case 'BloggerListEntity':
-			return List<BloggerListEntity>();			case 'BloggerListData':
-			return List<BloggerListData>();			case 'ProjectCategoryEntity':
-			return List<ProjectCategoryEntity>();			case 'ProjectCategoryData':
-			return List<ProjectCategoryData>();			case 'HomeArticleEntity':
-			return List<HomeArticleEntity>();			case 'HomeArticleData':
-			return List<HomeArticleData>();			case 'HomeArticleDataData':
-			return List<HomeArticleDataData>();			case 'HomeArticleDataDatasTag':
-			return List<HomeArticleDataDatasTag>();			case 'KnowledgeSystemEntity':
-			return List<KnowledgeSystemEntity>();			case 'KnowledgeSystemData':
-			return List<KnowledgeSystemData>();			case 'KnowledgeSystemDatachild':
-			return List<KnowledgeSystemDatachild>();			case 'LoginEntity':
-			return List<LoginEntity>();			case 'LoginData':
-			return List<LoginData>();    }
+    switch (type) {
+      case 'BloggerListEntity':
+        return List<BloggerListEntity>();
+      case 'BloggerListData':
+        return List<BloggerListData>();
+      case 'ProjectCategoryEntity':
+        return List<ProjectCategoryEntity>();
+      case 'ProjectCategoryData':
+        return List<ProjectCategoryData>();
+      case 'HomeArticleEntity':
+        return List<HomeArticleEntity>();
+      case 'HomeArticleData':
+        return List<HomeArticleData>();
+      case 'HomeArticleDataData':
+        return List<HomeArticleDataData>();
+      case 'HomeArticleDataDatasTag':
+        return List<HomeArticleDataDatasTag>();
+      case 'KnowledgeSystemEntity':
+        return List<KnowledgeSystemEntity>();
+      case 'KnowledgeSystemData':
+        return List<KnowledgeSystemData>();
+      case 'KnowledgeSystemDatachild':
+        return List<KnowledgeSystemDatachild>();
+      case 'LoginEntity':
+        return List<LoginEntity>();
+      case 'LoginData':
+        return List<LoginData>();
+    }
     return null;
   }
 

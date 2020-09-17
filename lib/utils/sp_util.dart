@@ -1,7 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpUtil {
-
   SpUtil._internal();
 
   static SpUtil _spUtils = SpUtil._internal();
