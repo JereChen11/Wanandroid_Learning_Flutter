@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/knowledge_system_entity.dart';
+import 'package:wanandroid_learning_flutter/ui/knowledge_system_article_list_page.dart';
+import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 
 class KnowledgeSystemPage extends StatefulWidget {
   @override
@@ -31,7 +33,8 @@ class _KnowledgeSystemPageState extends State<KnowledgeSystemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+        body: SafeArea(
+      child: Center(
         child: FutureBuilder(
           future: _retrieveKnowledgeSystemData(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -50,12 +53,12 @@ class _KnowledgeSystemPageState extends State<KnowledgeSystemPage> {
               }
             } else {
               // 请求未结束，显示loading
-              return CircularProgressIndicator();
+              return MyCircularProgressIndicator();
             }
           },
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -74,22 +77,38 @@ class ExpansionItem extends StatelessWidget {
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(bottom: 15, left: 30),
-              child: Text(
-                _knowledgeSystemData.children[index].name,
-                style: TextStyle(fontSize: 16),
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                color: Theme.of(context).cardTheme.color,
+                elevation: 30,
+                shadowColor: Colors.black.withOpacity(0.3),
+                margin: const EdgeInsets.only(right: 25),
+                child: InkWell(
+                  splashColor: Theme.of(context).primaryColor,
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                KnowledgeSystemArticleListPage(
+                                    _knowledgeSystemData.children[index].name,
+                                    _knowledgeSystemData.children[index].id)));
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      _knowledgeSystemData.children[index].name,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
               ),
-//              child: Chip(
-//                avatar: CircleAvatar(
-//                    backgroundColor: Colors.blue,
-//                    child: Text(_knowledgeSystemData.children[index].name
-//                        .substring(0, 1))),
-//                label: Text(_knowledgeSystemData.children[index].name),
-//              ),
             );
           },
           itemCount: _knowledgeSystemData.children.length,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
+          controller: ScrollController(),
         )
       ],
     );

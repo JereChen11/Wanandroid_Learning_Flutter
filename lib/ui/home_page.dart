@@ -4,11 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
+import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
-import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
 import 'package:wanandroid_learning_flutter/res/dimens.dart';
-import 'package:wanandroid_learning_flutter/ui/search_page.dart';
+import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
 
 import 'BrowserWebView.dart';
@@ -20,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _ArticleListViewState extends State<HomePage> {
-  List<HomeArticleDataData> articleData = new List();
+  List<Article> articleData = new List();
   List<BannerBean> bannerDataList = new List();
   int _pageNumber = 0;
 
@@ -41,10 +40,9 @@ class _ArticleListViewState extends State<HomePage> {
     try {
       Response response = await Dio()
           .get("https://www.wanandroid.com/article/list/$pageNumber/json");
-      HomeArticleEntity homeArticleEntity =
-          JsonConvert.fromJsonAsT(response.data);
+      ArticleBean articleBean = ArticleBean.fromJson(response.data);
       setState(() {
-        articleData.addAll(homeArticleEntity.data.datas);
+        articleData.addAll(articleBean.data.articles);
       });
     } catch (e) {
       print(e);
@@ -120,21 +118,11 @@ class _ArticleListViewState extends State<HomePage> {
           itemBuilder: (context, index) {
             if (index == articleData.length - 1) {
               _retrieveArticleData(_pageNumber++);
-              return Container(
-                padding: const EdgeInsets.all(16),
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ),
-                ),
-              );
+              return MyCircularProgressIndicator();
             }
 
             return new GestureDetector(
-              child: _ListItemWidget(articleData[index]),
+              child: ListItemWidget(articleData[index]),
               onTap: () {
                 Navigator.push(
                     context,
@@ -151,24 +139,20 @@ class _ArticleListViewState extends State<HomePage> {
   }
 }
 
-class _ListItemWidget extends StatefulWidget {
-  HomeArticleDataData data;
+class ListItemWidget extends StatefulWidget {
+  Article article;
 
-  _ListItemWidget(HomeArticleDataData data) {
-    this.data = data;
-  }
+  ListItemWidget(this.article);
 
   @override
-  _ListItemWidgetState createState() => new _ListItemWidgetState(data);
+  _ListItemWidgetState createState() => new _ListItemWidgetState(article);
 }
 
-class _ListItemWidgetState extends State<_ListItemWidget> {
-  HomeArticleDataData data;
+class _ListItemWidgetState extends State<ListItemWidget> {
+  Article _article;
   IconData _isCollectedIcon = Icons.favorite_border;
 
-  _ListItemWidgetState(HomeArticleDataData data) {
-    this.data = data;
-  }
+  _ListItemWidgetState(this._article);
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +164,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
         new Padding(
           padding: EdgeInsets.only(left: 10, top: 12, bottom: 10),
           child: new Text(
-            data.title,
+            _article.title,
             style: TextStyle(fontSize: 15, color: Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -198,7 +182,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
                     minWidth: 60,
                   ),
                   child: new Text(
-                    data.author.isEmpty ? data.shareUser : data.author,
+                    _article.author.isEmpty ? _article.shareUser : _article.author,
                     style: TextStyle(fontSize: 15, color: Colors.black),
                   ),
                 )),
@@ -206,7 +190,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
               child: new Container(
                 padding: EdgeInsets.only(left: 15, top: 10),
                 child: new Text(
-                  data.niceDate,
+                  _article.niceDate,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
@@ -249,7 +233,6 @@ Widget bannerView(List<BannerBean> bannerDataList) {
   return BannerView(
     data: bannerUrlList,
     buildShowView: (index, data) {
-      print("index = $index, data = $data");
       return Image.network(
         data,
         fit: BoxFit.cover,

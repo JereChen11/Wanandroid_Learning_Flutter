@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
+import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/blogger_list_entity.dart';
-import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
+import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 
 class WeChatPage extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class WeChatPage extends StatefulWidget {
 }
 
 class _WeChatPageState extends State<WeChatPage> {
-  List<HomeArticleDataData> _articleList = List();
+  List<Article> _articleList = List();
   int _currentBloggerId = 408; //鸿洋
   bool _isLoadAllArticles = false;
 
@@ -22,15 +23,15 @@ class _WeChatPageState extends State<WeChatPage> {
   }
 
   void _retrieveArticleListData(int pageNumber, int bloggerId) {
-    Future<HomeArticleEntity> articleEntityFuture =
-        getArticleListData(pageNumber, bloggerId);
+    Future<ArticleBean> articleBeanFuture =
+        _getArticleListData(pageNumber, bloggerId);
 
-    articleEntityFuture.then((value) => {
-          if (value.errorCode == 0 && value.data.datas.length > 0)
+    articleBeanFuture.then((value) => {
+          if (value.errorCode == 0 && value.data.articles.length > 0)
             {
               setState(() {
                 _articleList.clear();
-                _articleList.addAll(value.data.datas);
+                _articleList.addAll(value.data.articles);
                 _isLoadAllArticles = false;
               })
             }
@@ -44,27 +45,26 @@ class _WeChatPageState extends State<WeChatPage> {
         });
   }
 
-  Future<HomeArticleEntity> getArticleListData(
+  Future<ArticleBean> _getArticleListData(
       int pageNumber, int bloggerId) async {
     try {
       Response response = await Dio().get(
           "https://wanandroid.com/wxarticle/list/$bloggerId/$pageNumber/json");
-      print("getArticleListData = $response");
-      HomeArticleEntity articleEntity = JsonConvert.fromJsonAsT(response.data);
-      return articleEntity;
+      ArticleBean articleBean = ArticleBean.fromJson(response.data);
+      return articleBean;
     } catch (e) {
       print(e);
     }
   }
 
   void _loadMoreData(int pageNumber, int bloggerId) {
-    Future<HomeArticleEntity> articleEntityFuture =
-        getArticleListData(pageNumber, bloggerId);
+    Future<ArticleBean> articleEntityFuture =
+        _getArticleListData(pageNumber, bloggerId);
     articleEntityFuture.then((value) => {
-          if (value.errorCode == 0 && value.data.datas.length > 0)
+          if (value.errorCode == 0 && value.data.articles.length > 0)
             {
               setState(() {
-                _articleList.addAll(value.data.datas);
+                _articleList.addAll(value.data.articles);
                 _isLoadAllArticles = false;
               })
             }
@@ -81,33 +81,37 @@ class _WeChatPageState extends State<WeChatPage> {
   @override
   Widget build(BuildContext context) {
     print("_WeChatPageState build isLoadAllArticles = $_isLoadAllArticles");
-    return new Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        new Container(
-          width: MediaQuery.of(context).size.width,
-          height: 60,
-          child: BloggerList(
-            onSelectedChange: (int bloggerId) {
-              print("WeChatPage onSelectedChange bloggerId = $bloggerId");
-              _currentBloggerId = bloggerId;
-              _retrieveArticleListData(0, bloggerId);
-            },
-          ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: BloggerList(
+                onSelectedChange: (int bloggerId) {
+                  print("WeChatPage onSelectedChange bloggerId = $bloggerId");
+                  _currentBloggerId = bloggerId;
+                  _retrieveArticleListData(0, bloggerId);
+                },
+              ),
+            ),
+            Expanded(
+              child: BlogArticleList(
+                loadMoreData: (int pageNumber) {
+                  print("loadMoreData pageNumber = $pageNumber");
+                  _loadMoreData(pageNumber, _currentBloggerId);
+                },
+                articleList: _articleList,
+                isLoadAllArticles: _isLoadAllArticles,
+              ),
+            ),
+          ],
         ),
-        new Expanded(
-          child: BlogArticleList(
-            loadMoreData: (int pageNumber) {
-              print("loadMoreData pageNumber = $pageNumber");
-              _loadMoreData(pageNumber, _currentBloggerId);
-            },
-            articleList: _articleList,
-            isLoadAllArticles: _isLoadAllArticles,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -166,17 +170,7 @@ class _BloggerListSate extends State<BloggerList> {
       itemCount: _bloggerList.length,
       itemBuilder: (context, index) {
         if (!_isLoadAllBloggerData) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-              ),
-            ),
-          );
+          return MyCircularProgressIndicator();
         }
 
         return new GestureDetector(
@@ -237,7 +231,7 @@ class _BloggerListSate extends State<BloggerList> {
 
 class BlogArticleList extends StatefulWidget {
   final Function(int) loadMoreData;
-  List<HomeArticleDataData> articleList = List();
+  List<Article> articleList = List();
   bool isLoadAllArticles;
 
   BlogArticleList(
@@ -251,13 +245,13 @@ class BlogArticleList extends StatefulWidget {
 
 class _BlogArticleListState extends State<BlogArticleList> {
   Function(int) loadMoreData;
-  List<HomeArticleDataData> articleList = List();
+  List<Article> articleList = List();
   IconData _isCollectedIcon = Icons.favorite;
   int _pageNumber = 0;
   bool isLoadAllArticles;
 
   _BlogArticleListState(Function(int) loadMoreData,
-      List<HomeArticleDataData> articleList, bool isLoadAllArticles) {
+      List<Article> articleList, bool isLoadAllArticles) {
     this.loadMoreData = loadMoreData;
     this.articleList = articleList;
     this.isLoadAllArticles = isLoadAllArticles;

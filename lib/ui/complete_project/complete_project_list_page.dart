@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
-import 'package:wanandroid_learning_flutter/model/home_article_entity.dart';
+import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
 import 'package:wanandroid_learning_flutter/ui/BrowserWebView.dart';
 
@@ -19,7 +18,7 @@ class CompleteProjectListPage extends StatefulWidget {
 }
 
 class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
-  List<HomeArticleDataData> _articleData = List();
+  List<Article> _articleData = List();
   ProjectCategoryData _projectCategoryData;
   int _pageNumber = 0;
   bool _isNotLoadAllData = true;
@@ -34,12 +33,10 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
       Response response = await Dio().get(
           "https://www.wanandroid.com/project/list/$pageNumber/json?cid=$projectId");
       print(response);
-      HomeArticleEntity homeArticleEntity =
-          JsonConvert.fromJsonAsT(response.data);
-      if (homeArticleEntity.errorCode == 0 &&
-          homeArticleEntity.data.datas.length > 0) {
+      ArticleBean articleBean = ArticleBean.fromJson(response.data);
+      if (articleBean.errorCode == 0 && articleBean.data.articles.length > 0) {
         _pageNumber++;
-        _articleData.addAll(homeArticleEntity.data.datas);
+        _articleData.addAll(articleBean.data.articles);
         setState(() {});
       } else {
         setState(() {
@@ -116,22 +113,18 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
 }
 
 class _ListItemWidget extends StatefulWidget {
-  HomeArticleDataData _data;
+  Article _article;
 
-  _ListItemWidget(HomeArticleDataData data) {
-    this._data = data;
-  }
+  _ListItemWidget(this._article);
 
   @override
-  _ListItemWidgetState createState() => _ListItemWidgetState(_data);
+  _ListItemWidgetState createState() => _ListItemWidgetState(_article);
 }
 
 class _ListItemWidgetState extends State<_ListItemWidget> {
-  HomeArticleDataData _data;
+  Article _article;
 
-  _ListItemWidgetState(HomeArticleDataData data) {
-    this._data = data;
-  }
+  _ListItemWidgetState(this._article);
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +136,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           new Image(
-            image: NetworkImage(_data.envelopePic),
+            image: NetworkImage(_article.envelopePic),
             width: 110,
             height: 200,
             alignment: Alignment.center,
@@ -157,7 +150,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   new Text(
-                    _data.title,
+                    _article.title,
                     style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
@@ -170,7 +163,7 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
                     child: Container(
                       height: 130,
                       child: Text(
-                        _data.desc,
+                        _article.desc,
                         maxLines: 7,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -185,12 +178,12 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         new Text(
-                          _data.author,
+                          _article.author,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         new Expanded(
                           child: new Container(
-                            child: Text(_data.niceDate),
+                            child: Text(_article.niceDate),
                             alignment: Alignment.center,
                           ),
                         ),
