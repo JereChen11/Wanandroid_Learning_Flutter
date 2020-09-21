@@ -10,7 +10,7 @@ import 'package:wanandroid_learning_flutter/res/dimens.dart';
 import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
 
-import 'BrowserWebView.dart';
+import 'browser_web_view_page.dart';
 import 'LoginPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -128,7 +128,7 @@ class _ArticleListViewState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            BrowserWebView(articleData[index].link)));
+                            BrowserWebViewPage(articleData[index].link)));
               },
             );
           },

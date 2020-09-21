@@ -4,25 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
 import 'package:wanandroid_learning_flutter/ui/complete_project/complete_project_list_page.dart';
+import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 
-class ProjectPage extends StatelessWidget {
+class ProjectPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: ProjectCategoryWidget(),
-    );
-  }
+  _ProjectPageState createState() => _ProjectPageState();
 }
 
-class ProjectCategoryWidget extends StatefulWidget {
-  @override
-  _ProjectCategoryState createState() => _ProjectCategoryState();
-}
-
-class _ProjectCategoryState extends State<ProjectCategoryWidget> {
+class _ProjectPageState extends State<ProjectPage> {
   var _commentWidgets = List<Widget>();
+  var _tabList = List<Tab>();
+  var _tabBarView = List<Widget>();
 
-  void _retrieveData() async {
+  Future<ProjectCategoryEntity> _retrieveData() async {
     try {
       Response response =
           await Dio().get("https://www.wanandroid.com/project/tree/json");
@@ -30,28 +24,14 @@ class _ProjectCategoryState extends State<ProjectCategoryWidget> {
       ProjectCategoryEntity projectCategoryEntity =
           JsonConvert.fromJsonAsT(response.data);
       _commentWidgets.clear();
+      _tabList.clear();
+      _tabBarView.clear();
       for (var projectCategoryData in projectCategoryEntity.data) {
-        _commentWidgets.add(RaisedButton(
-          color: Colors.blue,
-          highlightColor: Colors.blue[700],
-          colorBrightness: Brightness.dark,
-          splashColor: Colors.white,
-          child: Text(projectCategoryData.name),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          onPressed: () {
-            print("jereTest: ${projectCategoryData.name}");
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CompleteProjectListPage(projectCategoryData)));
-          },
-        ));
+        _tabList.add(Tab(text: projectCategoryData.name));
+        _tabBarView.add(CompleteProjectListPage(projectCategoryData));
       }
       //刷新UI
-      setState(() {});
+      return projectCategoryEntity;
     } catch (e) {
       print(e);
     }
@@ -59,17 +39,47 @@ class _ProjectCategoryState extends State<ProjectCategoryWidget> {
 
   @override
   void initState() {
-    _retrieveData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Wrap(
-      spacing: 2,
-      runSpacing: 2,
-      alignment: WrapAlignment.center,
-      children: _commentWidgets,
+    return FutureBuilder(
+      future: _retrieveData(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            // 请求失败，显示错误
+            return Text("Error: ${snapshot.error}");
+          } else {
+            // 请求成功，显示数据
+            return MaterialApp(
+              home: DefaultTabController(
+                length: _tabList.length,
+                child: Scaffold(
+                  appBar: PreferredSize(
+                    preferredSize: Size.fromHeight(50.0),
+                    child: AppBar(
+                      bottom: TabBar(
+                        isScrollable: true,
+                        unselectedLabelColor: Colors.white.withOpacity(0.5),
+                        indicatorColor: Colors.white,
+                        tabs: _tabList,
+                      ),
+                    ),
+                  ),
+                  body: TabBarView(
+                    children: _tabBarView,
+                  ),
+                ),
+              ),
+            );
+          }
+        } else {
+          // 请求未结束，显示loading
+          return MyCircularProgressIndicator();
+        }
+      },
     );
   }
 }

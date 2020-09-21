@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/BrowserWebView.dart';
+import 'package:wanandroid_learning_flutter/ui/browser_web_view_page.dart';
 
 class CompleteProjectListPage extends StatefulWidget {
   ProjectCategoryData _projectCategoryData;
@@ -56,11 +56,7 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text(_projectCategoryData.name),
-        centerTitle: true,
-      ),
+    return Scaffold(
       body: ListView.builder(
         itemCount: _articleData.length,
         itemBuilder: (context, index) {
@@ -102,7 +98,7 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          BrowserWebView(_articleData[index].link)));
+                          BrowserWebViewPage(_articleData[index].link)));
             },
           );
         },

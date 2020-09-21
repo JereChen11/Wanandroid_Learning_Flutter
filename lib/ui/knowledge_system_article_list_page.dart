@@ -5,7 +5,7 @@ import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/ui/home_page.dart';
 import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 
-import 'BrowserWebView.dart';
+import 'browser_web_view_page.dart';
 
 class KnowledgeSystemArticleListPage extends StatefulWidget {
   String titleName;
@@ -87,7 +87,7 @@ class _KnowledgeSystemArticleListPageState
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              BrowserWebView(articleList[index].link)));
+                              BrowserWebViewPage(articleList[index].link)));
                 },
               );
             }
