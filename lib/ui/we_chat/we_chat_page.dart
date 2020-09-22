@@ -2,34 +2,33 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
-import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/complete_project/complete_project_list_page.dart';
+import 'package:wanandroid_learning_flutter/model/blogger_list_entity.dart';
+import 'package:wanandroid_learning_flutter/ui/we_chat/we_chat_list_page.dart';
 import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 
-class ProjectPage extends StatefulWidget {
+class WeChatPage extends StatefulWidget {
   @override
-  _ProjectPageState createState() => _ProjectPageState();
+  _WeChatPageState createState() => _WeChatPageState();
 }
 
-class _ProjectPageState extends State<ProjectPage> {
+class _WeChatPageState extends State<WeChatPage> {
   var _tabList = List<Tab>();
   var _tabBarView = List<Widget>();
 
-  Future<ProjectCategoryEntity> _retrieveData() async {
+  Future<BloggerListEntity> _retrieveBloggerListData() async {
     try {
       Response response =
-          await Dio().get("https://www.wanandroid.com/project/tree/json");
+          await Dio().get("https://wanandroid.com/wxarticle/chapters/json");
       print(response);
-      ProjectCategoryEntity projectCategoryEntity =
+      BloggerListEntity bloggerListEntity =
           JsonConvert.fromJsonAsT(response.data);
       _tabList.clear();
       _tabBarView.clear();
-      for (var projectCategoryData in projectCategoryEntity.data) {
-        _tabList.add(Tab(text: projectCategoryData.name));
-        _tabBarView.add(CompleteProjectListPage(projectCategoryData));
+      for (var bloggerListData in bloggerListEntity.data) {
+        _tabList.add(Tab(text: bloggerListData.name));
+        _tabBarView.add(WeChatListPage(bloggerListData.id));
       }
-      //刷新UI
-      return projectCategoryEntity;
+      return bloggerListEntity;
     } catch (e) {
       print(e);
     }
@@ -38,7 +37,7 @@ class _ProjectPageState extends State<ProjectPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _retrieveData(),
+      future: _retrieveBloggerListData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {

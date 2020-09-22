@@ -8,7 +8,7 @@ import 'package:wanandroid_learning_flutter/ui/home_page.dart';
 import 'package:wanandroid_learning_flutter/ui/knowledge_system_page.dart';
 import 'package:wanandroid_learning_flutter/ui/me_page.dart';
 import 'package:wanandroid_learning_flutter/ui/complete_project/project_page.dart';
-import 'package:wanandroid_learning_flutter/ui/we_chat_page.dart';
+import 'package:wanandroid_learning_flutter/ui/we_chat/we_chat_page.dart';
 import 'package:wanandroid_learning_flutter/res/colours.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
