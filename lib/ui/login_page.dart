@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
 import 'package:wanandroid_learning_flutter/model/login_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/RegisterPage.dart';
+import 'package:wanandroid_learning_flutter/ui/me_page.dart';
+import 'package:wanandroid_learning_flutter/ui/register_page.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
@@ -22,27 +23,23 @@ class _LoginState extends State<LoginPage> {
   @override
   void initState() {
     _usernameController.addListener(() {
-      if (_usernameController.text.trim().isNotEmpty) {
-        setState(() {
+      setState(() {
+        if (_usernameController.text.trim().isNotEmpty) {
           _isInputUsernameContent = true;
-        });
-      } else {
-        setState(() {
+        } else {
           _isInputUsernameContent = false;
-        });
-      }
+        }
+      });
     });
 
     _passwordController.addListener(() {
-      if (_passwordController.text.trim().isNotEmpty) {
-        setState(() {
+      setState(() {
+        if (_passwordController.text.trim().isNotEmpty) {
           _isInputPasswordContent = true;
-        });
-      } else {
-        setState(() {
+        } else {
           _isInputPasswordContent = false;
-        });
-      }
+        }
+      });
     });
     super.initState();
   }
@@ -64,13 +61,21 @@ class _LoginState extends State<LoginPage> {
       });
       Response response = await Dio()
           .post("https://www.wanandroid.com/user/login?", data: formData);
+      List<String> cookieStringList = response.headers["Set-Cookie"];
+      SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
       LoginEntity loginEntity = JsonConvert.fromJsonAsT(response.data);
       if (loginEntity.errorCode == 0) {
         SpUtil().putString(Constant.usernameTag, _usernameController.text);
+        SpUtil().putBool(Constant.isLoginKey, true);
         Fluttertoast.showToast(msg: "登入成功：${loginEntity.data.username}");
-        Navigator.pop(context);
+        print("登入成功 = ${SpUtil().getBool(Constant.isLoginKey)}");
+        Navigator.pop(context, "loginSuccessful");
+//        Navigator.push(
+//            context, MaterialPageRoute(builder: (context) => MePage()));
+
       } else {
         Fluttertoast.showToast(msg: "登入失败：${loginEntity.errorMsg}");
+        print("登入成功 = ${SpUtil().getBool(Constant.isLoginKey)}");
       }
       print(response.data.toString());
     } catch (e) {
@@ -80,28 +85,28 @@ class _LoginState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       decoration: BoxDecoration(
         color: Colors.grey,
-        image: new DecorationImage(
+        image: DecorationImage(
             image: AssetImage("assets/images/landscape.jpg"),
-            colorFilter: new ColorFilter.mode(
+            colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(0.7), BlendMode.dstATop),
             fit: BoxFit.fill),
       ),
-      child: new Scaffold(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: new Text("Login Page"),
+          title: Text("Login Page"),
         ),
-        body: new Padding(
+        body: Padding(
           padding: EdgeInsets.only(top: 50, left: 25, right: 25),
-          child: new Column(
+          child: Column(
             children: <Widget>[
-              new TextField(
+              TextField(
                 controller: _usernameController,
                 textInputAction: TextInputAction.go,
                 keyboardType: TextInputType.text,
@@ -122,7 +127,7 @@ class _LoginState extends State<LoginPage> {
                   ),
                 ),
               ),
-              new TextField(
+              TextField(
                 controller: _passwordController,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
@@ -143,9 +148,9 @@ class _LoginState extends State<LoginPage> {
                 ),
                 obscureText: true,
               ),
-              new Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 20),
-                child: new RaisedButton(
+                child: RaisedButton(
                   child: Text("登入"),
                   color: Colors.white54,
                   shape: RoundedRectangleBorder(
@@ -164,11 +169,11 @@ class _LoginState extends State<LoginPage> {
                   },
                 ),
               ),
-              new Expanded(
-                child: new Container(
+              Expanded(
+                child: Container(
                   alignment: Alignment.bottomCenter,
                   margin: EdgeInsets.only(bottom: 25),
-                  child: new GestureDetector(
+                  child: GestureDetector(
                     child: Text(
                       "还没有注册? 点击注册",
                       style: TextStyle(

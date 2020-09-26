@@ -25,39 +25,33 @@ class _RegisterState extends State<RegisterPage> {
   @override
   void initState() {
     _usernameController.addListener(() {
-      if (_usernameController.text.trim().isNotEmpty) {
-        setState(() {
+      setState(() {
+        if (_usernameController.text.trim().isNotEmpty) {
           _isInputUsernameContent = true;
-        });
-      } else {
-        setState(() {
+        } else {
           _isInputUsernameContent = false;
-        });
-      }
+        }
+      });
     });
 
     _passwordController.addListener(() {
-      if (_passwordController.text.trim().isNotEmpty) {
-        setState(() {
+      setState(() {
+        if (_passwordController.text.trim().isNotEmpty) {
           _isInputPasswordContent = true;
-        });
-      } else {
-        setState(() {
+        } else {
           _isInputPasswordContent = false;
-        });
-      }
+        }
+      });
     });
 
     _rePasswordController.addListener(() {
-      if (_rePasswordController.text.trim().isNotEmpty) {
-        setState(() {
+      setState(() {
+        if (_rePasswordController.text.trim().isNotEmpty) {
           _isInputRePasswordContent = true;
-        });
-      } else {
-        setState(() {
+        } else {
           _isInputRePasswordContent = false;
-        });
-      }
+        }
+      });
     });
     super.initState();
   }
@@ -86,9 +80,13 @@ class _RegisterState extends State<RegisterPage> {
       dio.options.receiveTimeout = 3000;
       Response response = await dio
           .post("https://www.wanandroid.com/user/register", data: formData);
+      List<String> cookieStringList = response.headers["Set-Cookie"];
+      SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
+
       LoginEntity loginEntity = JsonConvert.fromJsonAsT(response.data);
       if (loginEntity.errorCode == 0) {
         SpUtil().putString(Constant.usernameTag, _usernameController.text);
+        SpUtil().putBool(Constant.isLoginKey, true);
         Fluttertoast.showToast(msg: "注册成功：${loginEntity.data.username}");
         return _registerSuccessful;
       } else {
@@ -102,16 +100,16 @@ class _RegisterState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       decoration: BoxDecoration(
         color: Colors.grey,
-        image: new DecorationImage(
+        image: DecorationImage(
             image: AssetImage("assets/images/landscape.jpg"),
-            colorFilter: new ColorFilter.mode(
+            colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(0.7), BlendMode.dstATop),
             fit: BoxFit.fill),
       ),
-      child: new Scaffold(
+      child: Scaffold(
           backgroundColor: Colors.transparent,
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -119,11 +117,11 @@ class _RegisterState extends State<RegisterPage> {
             title: Text("Register Page"),
             backgroundColor: Colors.transparent,
           ),
-          body: new Padding(
+          body: Padding(
             padding: EdgeInsets.only(top: 50, left: 25, right: 25),
-            child: new Column(
+            child: Column(
               children: <Widget>[
-                new TextField(
+                TextField(
                   controller: _usernameController,
                   textInputAction: TextInputAction.go,
                   keyboardType: TextInputType.text,
@@ -144,7 +142,7 @@ class _RegisterState extends State<RegisterPage> {
                     ),
                   ),
                 ),
-                new TextField(
+                TextField(
                   controller: _passwordController,
                   textInputAction: TextInputAction.go,
                   keyboardType: TextInputType.visiblePassword,
@@ -166,7 +164,7 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                   obscureText: true,
                 ),
-                new TextField(
+                TextField(
                   controller: _rePasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
@@ -187,9 +185,9 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                   obscureText: true,
                 ),
-                new Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 20),
-                  child: new RaisedButton(
+                  child: RaisedButton(
                       child: Text("注册"),
                       color: Colors.white54,
                       shape: RoundedRectangleBorder(

@@ -1,10 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wanandroid_learning_flutter/ui/LoginPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:wanandroid_learning_flutter/ui/login_page.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
-class MePage extends StatelessWidget {
+class MePage extends StatefulWidget {
+  @override
+  _MePageState createState() => _MePageState();
+}
+
+class _MePageState extends State<MePage> {
+  String _isLoginStatus;
+
+  void _reformatLoginStatus() {
+    setState(() {
+      if (SpUtil().getBool(Constant.isLoginKey) == null ||
+          !SpUtil().getBool(Constant.isLoginKey)) {
+        _isLoginStatus = "登入";
+      } else {
+        _isLoginStatus = "登出";
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    print("initstate");
+    _reformatLoginStatus();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +44,6 @@ class MePage extends StatelessWidget {
             overflow: Overflow.visible,
             children: <Widget>[
               Container(
-                color: Colors.blue,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 4.5,
                 child: Image(
@@ -27,14 +52,13 @@ class MePage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 40,
+                top: MediaQuery.of(context).size.height / 4.5 - 60,
                 child: GestureDetector(
                   child: Column(
                     children: <Widget>[
                       Container(
                         width: 120,
                         height: 120,
-                        margin: EdgeInsets.only(top: 10),
                         decoration: new BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
@@ -43,19 +67,20 @@ class MePage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        SpUtil().getString(Constant.usernameTag),
-                        style: TextStyle(fontSize: 25, color: Colors.black38),
-                      ),
-                      Text(
-                        "jerechen11@gmail.com",
-                        style: TextStyle(fontSize: 18, color: Colors.black38),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          SpUtil().getString(Constant.usernameTag) == null
+                              ? "username"
+                              : SpUtil().getString(Constant.usernameTag),
+                          style: TextStyle(fontSize: 25, color: Colors.black38),
+                        ),
                       ),
                       Container(
                         width: 250,
                         height: 1,
                         color: Colors.grey,
-                        margin: EdgeInsets.only(top: 8),
+                        margin: EdgeInsets.only(top: 10),
                       )
                     ],
                   ),
@@ -73,14 +98,26 @@ class MePage extends StatelessWidget {
             height: 10,
             margin: EdgeInsets.only(top: 100),
           ),
-          _MePageItem(Icons.face, "about us"),
-          _MePageItem(Icons.print, "print"),
+          SizedBox(
+            height: 20,
+          ),
           GestureDetector(
-            child: _MePageItem(Icons.send, "Send"),
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage())),
-          )
-//        _MePageItem(Icons.send, "Send"),
+              child: _MePageItem(Icons.person, _isLoginStatus),
+              onTap: () {
+                if (SpUtil().getBool(Constant.isLoginKey) == null ||
+                    !SpUtil().getBool(Constant.isLoginKey)) {
+                  Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()))
+                      .then((value) => {
+                            if (value == "loginSuccessful")
+                              _reformatLoginStatus(),
+                          });
+                } else {
+                  SpUtil().putBool(Constant.isLoginKey, false);
+                  Fluttertoast.showToast(msg: "退出登入", textColor: Colors.black);
+                  _reformatLoginStatus();
+                }
+              })
         ],
       ),
     );

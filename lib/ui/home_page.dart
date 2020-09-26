@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -7,15 +8,17 @@ import 'package:flutter/rendering.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
 import 'package:wanandroid_learning_flutter/res/dimens.dart';
+import 'package:wanandroid_learning_flutter/utils/constant.dart';
+import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
 
 import 'browser_web_view_page.dart';
-import 'LoginPage.dart';
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _ArticleListViewState createState() => new _ArticleListViewState();
+  _ArticleListViewState createState() => _ArticleListViewState();
 }
 
 class _ArticleListViewState extends State<HomePage> {
@@ -121,7 +124,7 @@ class _ArticleListViewState extends State<HomePage> {
               return MyCircularProgressIndicator();
             }
 
-            return new GestureDetector(
+            return GestureDetector(
               child: ListItemWidget(articleData[index]),
               onTap: () {
                 Navigator.push(
@@ -145,7 +148,7 @@ class ListItemWidget extends StatefulWidget {
   ListItemWidget(this.article);
 
   @override
-  _ListItemWidgetState createState() => new _ListItemWidgetState(article);
+  _ListItemWidgetState createState() => _ListItemWidgetState(article);
 }
 
 class _ListItemWidgetState extends State<ListItemWidget> {
@@ -154,68 +157,105 @@ class _ListItemWidgetState extends State<ListItemWidget> {
 
   _ListItemWidgetState(this._article);
 
+    void _collectArticle(int articleId) async {
+    try {
+      print("start _collectArticle");
+
+      var dio = Dio();
+      dio.interceptors.clear();
+      dio.interceptors
+          .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
+        List<String> cookieStringList =
+            SpUtil().getStringList(Constant.cookieListKey);
+        print("cookieStringList = ${cookieStringList.toString()}");
+
+        options.headers[HttpHeaders.cookieHeader] = cookieStringList.toString();
+        cookieStringList.forEach((element) {
+          print("cookieStringList element = $element");
+          options.headers[HttpHeaders.cookieHeader] = element;
+        });
+        return options;
+      }));
+//      dio.interceptors.add(MyInterceptor());
+
+      Response response = await dio
+          .post("https://www.wanandroid.com/lg/collect/$articleId/json");
+      print("response.data = ${response.data}");
+
+    } catch (e) {
+      print("_collectArticle = $e");
+    }
+  }
+
+  @override
+  void initState() {
+    if (_article.collect) {
+      _isCollectedIcon = Icons.favorite;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        new Padding(
+        Padding(
           padding: EdgeInsets.only(left: 10, top: 12, bottom: 10),
-          child: new Text(
+          child: Text(
             _article.title,
             style: TextStyle(fontSize: 15, color: Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        new Row(
+        Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            new Padding(
+            Padding(
                 padding: EdgeInsets.only(left: 10, top: 10),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minWidth: 60,
                   ),
-                  child: new Text(
-                    _article.author.isEmpty ? _article.shareUser : _article.author,
+                  child: Text(
+                    _article.author.isEmpty
+                        ? _article.shareUser
+                        : _article.author,
                     style: TextStyle(fontSize: 15, color: Colors.black),
                   ),
                 )),
-            new Expanded(
-              child: new Container(
+            Expanded(
+              child: Container(
                 padding: EdgeInsets.only(left: 15, top: 10),
-                child: new Text(
+                child: Text(
                   _article.niceDate,
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ),
             ),
-            new Padding(
+            Padding(
               padding: EdgeInsets.only(right: 10),
-              child: new IconButton(
+              child: IconButton(
                 alignment: Alignment.topCenter,
-                color: Colors.yellowAccent,
-                icon: new Icon(
+                icon: Icon(
                   _isCollectedIcon,
                   color: Colors.red,
                 ),
                 onPressed: () {
-                  print("jereTest print iconButton");
-//                  setState() {
-//                    _isCollectedIcon = Icons.favorite;
-//                  }
-                  _isCollectedIcon = Icons.favorite;
+                  print(
+                      "jereTest print iconButton _article.id = ${_article.id}");
+                  _collectArticle(_article.id);
                 },
               ),
             ),
           ],
         ),
-        new Container(
+        Container(
           color: Colors.grey,
           width: MediaQuery.of(context).size.width,
           height: 1,
