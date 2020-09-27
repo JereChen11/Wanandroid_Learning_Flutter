@@ -1,56 +1,51 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
-import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/browser_web_view_page.dart';
+import 'package:wanandroid_learning_flutter/res/strings.dart';
+import 'package:wanandroid_learning_flutter/page/web_view_page.dart';
+import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
 
-class CompleteProjectListPage extends StatefulWidget {
-  ProjectCategoryData _projectCategoryData;
+class ProjectArticleListPage extends StatefulWidget {
+  int _projectCategoryId;
 
-  CompleteProjectListPage(ProjectCategoryData projectCategoryData) {
-    this._projectCategoryData = projectCategoryData;
+  ProjectArticleListPage(int projectCategoryId) {
+    this._projectCategoryId = projectCategoryId;
   }
 
   @override
-  _CompleteProjectListPageState createState() =>
-      _CompleteProjectListPageState(_projectCategoryData);
+  _ProjectArticleListPageState createState() =>
+      _ProjectArticleListPageState(_projectCategoryId);
 }
 
-class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
-  List<Article> _articleData = List();
-  ProjectCategoryData _projectCategoryData;
+class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
+  List<Article> _articleList = List();
+  int _projectCategoryId;
   int _pageNumber = 0;
-  bool _isNotLoadAllData = true;
+  bool _isLoadAllArticles = false;
 
-  _CompleteProjectListPageState(ProjectCategoryData projectCategoryData) {
-    this._projectCategoryData = projectCategoryData;
+  _ProjectArticleListPageState(int projectCategoryId) {
+    this._projectCategoryId = projectCategoryId;
   }
 
-  void _retrieveArticleData(int pageNumber, int projectId) async {
-    try {
-      print("jereTest: pageNumber = $pageNumber, projectId = $projectId");
-      Response response = await Dio().get(
-          "https://www.wanandroid.com/project/list/$pageNumber/json?cid=$projectId");
-      print(response);
-      ArticleBean articleBean = ArticleBean.fromJson(response.data);
-      if (articleBean.errorCode == 0 && articleBean.data.articles.length > 0) {
-        _pageNumber++;
-        _articleData.addAll(articleBean.data.articles);
-        setState(() {});
-      } else {
-        setState(() {
-          _isNotLoadAllData = false;
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
+  void _getProjectArticleData(int pageNumber) async {
+    ApiService().getProjectArticleData(pageNumber, _projectCategoryId,
+        (ArticleBean articleBean) {
+      setState(() {
+        if (articleBean.data != null) {
+          _isLoadAllArticles = articleBean.data.over;
+          _articleList.addAll(articleBean.data.articles);
+        }
+        if (_isLoadAllArticles) {
+          _articleList.add(null); //用于展示所有文章都以被加载
+        }
+      });
+    });
   }
 
   @override
   void initState() {
-    _retrieveArticleData(_pageNumber, _projectCategoryData.id);
+    _getProjectArticleData(_pageNumber);
     super.initState();
   }
 
@@ -58,47 +53,32 @@ class _CompleteProjectListPageState extends State<CompleteProjectListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-        itemCount: _articleData.length,
+        itemCount: _articleList.length,
         itemBuilder: (context, index) {
-          if (index == _articleData.length - 1) {
+          if (index == _articleList.length - 1) {
             //加载了所有数据后，不必再去请求服务器，这时候也不应该展示 loading, 而是展示"所有文章都已被加载"
-            if (_isNotLoadAllData) {
-              _retrieveArticleData(_pageNumber, _projectCategoryData.id);
+            if (!_isLoadAllArticles) {
+              _getProjectArticleData(++_pageNumber);
+              return MyCircularProgressIndicator();
+            } else {
+              return Container(
+                padding: EdgeInsets.all(5),
+                alignment: Alignment.center,
+                child: Text(
+                  Strings.IS_LOAD_ALL_ARTICLE_CN,
+                ),
+              );
             }
-            return Container(
-              padding: const EdgeInsets.all(16),
-              alignment: Alignment.center,
-              child: new Column(
-                children: <Widget>[
-                  new SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: new Visibility(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                      visible: _isNotLoadAllData,
-                    ),
-                  ),
-                  new Visibility(
-                    child: Text(
-                      "所有文章都已被加载",
-                    ),
-                    visible: !_isNotLoadAllData,
-                  ),
-                ],
-              ),
-            );
           }
 
           return new GestureDetector(
-            child: _ListItemWidget(_articleData[index]),
+            child: _ListItemWidget(_articleList[index]),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          BrowserWebViewPage(_articleData[index].link)));
+                          WebViewPage(_articleList[index].link)));
             },
           );
         },

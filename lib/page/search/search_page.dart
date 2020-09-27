@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wanandroid_learning_flutter/model/project_category_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/complete_project/complete_project_list_page.dart';
+import 'package:wanandroid_learning_flutter/model/article_category_bean.dart';
 
-class SearchPage extends SearchDelegate<ProjectCategoryData> {
-  final List<ProjectCategoryData> data;
+class SearchPage extends SearchDelegate<Category> {
+  final List<Category> data;
 
   SearchPage(this.data);
 
@@ -39,7 +38,7 @@ class SearchPage extends SearchDelegate<ProjectCategoryData> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<ProjectCategoryData> list = query.isEmpty
+    List<Category> list = query.isEmpty
         ? data
         : data.where((p) => p.name.toLowerCase().startsWith(query)).toList();
     return list.isEmpty
@@ -58,12 +57,12 @@ class SearchPage extends SearchDelegate<ProjectCategoryData> {
                 onTap: () {
                   close(context, null);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CompleteProjectListPage(item),
-                    ),
-                  );
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => CompleteProjectListPage(item),
+//                    ),
+//                  );
                 },
               );
             },

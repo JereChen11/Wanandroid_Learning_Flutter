@@ -1,11 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
-import 'package:wanandroid_learning_flutter/model/login_entity.dart';
-import 'package:wanandroid_learning_flutter/ui/me_page.dart';
-import 'package:wanandroid_learning_flutter/ui/register_page.dart';
+import 'package:wanandroid_learning_flutter/api/api_service.dart';
+import 'package:wanandroid_learning_flutter/model/user_bean.dart';
+import 'package:wanandroid_learning_flutter/page/login/register_page.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
@@ -52,35 +50,20 @@ class _LoginState extends State<LoginPage> {
   }
 
   void _login() async {
-    print(
-        "username: ${_usernameController.text} password: ${_passwordController.text}");
-    try {
-      FormData formData = new FormData.fromMap({
-        "username": _usernameController.text,
-        "password": _passwordController.text,
-      });
-      Response response = await Dio()
-          .post("https://www.wanandroid.com/user/login?", data: formData);
-      List<String> cookieStringList = response.headers["Set-Cookie"];
-      SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
-      LoginEntity loginEntity = JsonConvert.fromJsonAsT(response.data);
-      if (loginEntity.errorCode == 0) {
+    var data = {
+      "username": _usernameController.text,
+      "password": _passwordController.text,
+    };
+    ApiService().login(data, (UserBean userBean) {
+      if (userBean.errorCode == 0) {
         SpUtil().putString(Constant.usernameTag, _usernameController.text);
         SpUtil().putBool(Constant.isLoginKey, true);
-        Fluttertoast.showToast(msg: "登入成功：${loginEntity.data.username}");
-        print("登入成功 = ${SpUtil().getBool(Constant.isLoginKey)}");
+        Fluttertoast.showToast(msg: "登入成功：${userBean.data.username}");
         Navigator.pop(context, "loginSuccessful");
-//        Navigator.push(
-//            context, MaterialPageRoute(builder: (context) => MePage()));
-
       } else {
-        Fluttertoast.showToast(msg: "登入失败：${loginEntity.errorMsg}");
-        print("登入成功 = ${SpUtil().getBool(Constant.isLoginKey)}");
+        Fluttertoast.showToast(msg: "登入失败：${userBean.errorMsg}");
       }
-      print(response.data.toString());
-    } catch (e) {
-      print("catch exception: ${e}");
-    }
+    });
   }
 
   @override
@@ -100,7 +83,7 @@ class _LoginState extends State<LoginPage> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: Text("Login Page"),
+          title: Text("登入账号"),
         ),
         body: Padding(
           padding: EdgeInsets.only(top: 50, left: 25, right: 25),

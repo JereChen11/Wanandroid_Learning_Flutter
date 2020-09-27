@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:wanandroid_learning_flutter/generated/json/base/json_convert_content.dart';
+import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/main.dart';
-import 'package:wanandroid_learning_flutter/model/login_entity.dart';
+import 'package:wanandroid_learning_flutter/model/user_bean.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
@@ -20,7 +19,6 @@ class _RegisterState extends State<RegisterPage> {
   bool _isInputUsernameContent = false;
   bool _isInputPasswordContent = false;
   bool _isInputRePasswordContent = false;
-  final String _registerSuccessful = "successful";
 
   @override
   void initState() {
@@ -64,38 +62,23 @@ class _RegisterState extends State<RegisterPage> {
     super.dispose();
   }
 
-  Future<String> _register() async {
-    print("username: ${_usernameController.text} "
-        "password: ${_passwordController.text} "
-        "rePassword: ${_rePasswordController.text}");
-    try {
-      FormData formData = new FormData.fromMap({
-        "username": _usernameController.text,
-        "password": _passwordController.text,
-        "repassword": _rePasswordController.text,
-      });
-      Dio dio = new Dio();
-      dio.options.baseUrl = "https://www.wanandroid.com";
-      dio.options.connectTimeout = 5000;
-      dio.options.receiveTimeout = 3000;
-      Response response = await dio
-          .post("https://www.wanandroid.com/user/register", data: formData);
-      List<String> cookieStringList = response.headers["Set-Cookie"];
-      SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
-
-      LoginEntity loginEntity = JsonConvert.fromJsonAsT(response.data);
-      if (loginEntity.errorCode == 0) {
+  void _register() async {
+    var data = {
+      "username": _usernameController.text,
+      "password": _passwordController.text,
+      "repassword": _rePasswordController.text,
+    };
+    ApiService().register(data, (UserBean userBean) {
+      if (userBean.errorCode == 0) {
         SpUtil().putString(Constant.usernameTag, _usernameController.text);
         SpUtil().putBool(Constant.isLoginKey, true);
-        Fluttertoast.showToast(msg: "注册成功：${loginEntity.data.username}");
-        return _registerSuccessful;
+        Fluttertoast.showToast(msg: "注册成功：${userBean.data.username}");
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => MyApp()), (route) => false);
       } else {
-        Fluttertoast.showToast(msg: "注册失败：${loginEntity.errorMsg}");
-        return loginEntity.errorMsg;
+        Fluttertoast.showToast(msg: "注册失败：${userBean.errorMsg}");
       }
-    } catch (e) {
-      print(e);
-    }
+    });
   }
 
   @override
@@ -114,7 +97,7 @@ class _RegisterState extends State<RegisterPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             elevation: 0,
-            title: Text("Register Page"),
+            title: Text("注册账号"),
             backgroundColor: Colors.transparent,
           ),
           body: Padding(
@@ -198,16 +181,7 @@ class _RegisterState extends State<RegisterPage> {
                             _isInputRePasswordContent) {
                           if (_passwordController.text ==
                               _rePasswordController.text) {
-                            _register().then((value) => {
-                                  if (value == _registerSuccessful)
-                                    {
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => MyApp()),
-                                          (route) => false)
-                                    }
-                                });
+                            _register();
                           } else {
                             Fluttertoast.showToast(msg: "请检查两次输入的密码是否一致");
                           }

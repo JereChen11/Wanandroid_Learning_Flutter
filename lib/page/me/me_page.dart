@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:wanandroid_learning_flutter/ui/login_page.dart';
+import 'package:wanandroid_learning_flutter/api/api_service.dart';
+import 'package:wanandroid_learning_flutter/model/user_bean.dart';
+import 'package:wanandroid_learning_flutter/page/login/login_page.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
@@ -114,8 +116,15 @@ class _MePageState extends State<MePage> {
                           });
                 } else {
                   SpUtil().putBool(Constant.isLoginKey, false);
-                  Fluttertoast.showToast(msg: "退出登入", textColor: Colors.black);
-                  _reformatLoginStatus();
+                  SpUtil().remove(Constant.usernameTag);
+                  SpUtil().remove(Constant.cookieListKey);
+                  ApiService().logout((UserBean userBean) {
+                    if (userBean.errorCode == 0) {
+                      Fluttertoast.showToast(
+                          msg: "退出登入", textColor: Colors.black);
+                      _reformatLoginStatus();
+                    }
+                  });
                 }
               })
         ],

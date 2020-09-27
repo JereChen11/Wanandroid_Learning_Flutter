@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/res/text_styles.dart';
-import 'package:wanandroid_learning_flutter/ui/home_page.dart';
-import 'package:wanandroid_learning_flutter/ui/knowledge_system_page.dart';
-import 'package:wanandroid_learning_flutter/ui/me_page.dart';
-import 'package:wanandroid_learning_flutter/ui/complete_project/project_page.dart';
-import 'package:wanandroid_learning_flutter/ui/we_chat/we_chat_page.dart';
+import 'package:wanandroid_learning_flutter/page/home/home_page.dart';
+import 'package:wanandroid_learning_flutter/page/knowledge_system/knowledge_system_page.dart';
+import 'package:wanandroid_learning_flutter/page/me/me_page.dart';
+import 'package:wanandroid_learning_flutter/page/project/project_page.dart';
+import 'package:wanandroid_learning_flutter/page/we_chat/we_chat_page.dart';
 import 'package:wanandroid_learning_flutter/res/colours.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
@@ -65,23 +65,23 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   final List<Widget> _appBar = [
     AppBar(
       centerTitle: true,
-      title: Text(Strings.home_cn),
+      title: Text(Strings.HOME_CN),
     ),
     AppBar(
       centerTitle: true,
-      title: Text(Strings.complete_project_cn),
+      title: Text(Strings.PROJECT_CN),
     ),
     AppBar(
       centerTitle: true,
-      title: Text(Strings.complete_project_cn),
+      title: Text(Strings.PROJECT_CN),
     ),
     AppBar(
       centerTitle: true,
-      title: Text(Strings.knowledge_system_cn),
+      title: Text(Strings.KNOWLEDGE_SYSTEM_CN),
     ),
     AppBar(
       centerTitle: true,
-      title: Text(Strings.me_cn),
+      title: Text(Strings.ME_CN),
     ),
   ];
 
@@ -143,7 +143,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
             ListTile(
               title: Text(
-                Strings.home_cn,
+                Strings.HOME_CN,
                 style: TextStyles.size18AndBoldText,
                 textAlign: TextAlign.center,
               ),
@@ -156,7 +156,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
             ListTile(
               title: Text(
-                Strings.complete_project_cn,
+                Strings.PROJECT_CN,
                 style: TextStyles.size18AndBoldText,
                 textAlign: TextAlign.center,
               ),
@@ -169,7 +169,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
             ListTile(
               title: Text(
-                Strings.we_chat_cn,
+                Strings.WE_CHAT_CN,
                 style: TextStyles.size18AndBoldText,
                 textAlign: TextAlign.center,
               ),
@@ -182,7 +182,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
             ListTile(
               title: Text(
-                Strings.knowledge_system_cn,
+                Strings.KNOWLEDGE_SYSTEM_CN,
                 style: TextStyles.size18AndBoldText,
                 textAlign: TextAlign.center,
               ),
@@ -195,7 +195,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             ),
             ListTile(
               title: Text(
-                Strings.me_cn,
+                Strings.ME_CN,
                 style: TextStyles.size18AndBoldText,
                 textAlign: TextAlign.center,
               ),
@@ -217,7 +217,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              Strings.home_cn,
+              Strings.HOME_CN,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -227,7 +227,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              Strings.complete_project_cn,
+              Strings.PROJECT_CN,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -237,7 +237,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              Strings.we_chat_cn,
+              Strings.WE_CHAT_CN,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -247,7 +247,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              Strings.knowledge_system_cn,
+              Strings.KNOWLEDGE_SYSTEM_CN,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
@@ -257,7 +257,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               color: _bottomNavigationBarColor,
             ),
             title: Text(
-              Strings.me_cn,
+              Strings.ME_CN,
               style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),

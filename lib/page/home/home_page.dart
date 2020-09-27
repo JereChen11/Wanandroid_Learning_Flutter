@@ -1,20 +1,18 @@
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
+import 'package:wanandroid_learning_flutter/model/collect_article_bean.dart';
 import 'package:wanandroid_learning_flutter/res/dimens.dart';
-import 'package:wanandroid_learning_flutter/utils/constant.dart';
-import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
-import 'package:wanandroid_learning_flutter/widget/MyCircularProgressIndicator.dart';
+import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
 
-import 'browser_web_view_page.dart';
-import 'login_page.dart';
+import '../web_view_page.dart';
+import '../login/login_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,34 +20,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _ArticleListViewState extends State<HomePage> {
-  List<Article> articleData = new List();
+  List<Article> articleDataList = new List();
   List<BannerBean> bannerDataList = new List();
   int _pageNumber = 0;
 
   void _retrieveBannerData() async {
-    try {
-      Response response =
-          await Dio().get("https://www.wanandroid.com/banner/json");
-      BannerData bannerData = BannerData.fromJson(response.data);
+    ApiService().getHomeBanner((BannerData bannerData) {
       setState(() {
         bannerDataList.addAll(bannerData.bannerBean);
       });
-    } catch (e) {
-      print("catch e = $e");
-    }
+    });
   }
 
   void _retrieveArticleData(int pageNumber) async {
-    try {
-      Response response = await Dio()
-          .get("https://www.wanandroid.com/article/list/$pageNumber/json");
-      ArticleBean articleBean = ArticleBean.fromJson(response.data);
+    ApiService().getHomeArticleList(pageNumber, (ArticleBean articleBean) {
       setState(() {
-        articleData.addAll(articleBean.data.articles);
+        articleDataList.addAll(articleBean.data.articles);
       });
-    } catch (e) {
-      print(e);
-    }
+    });
   }
 
   @override
@@ -117,21 +105,21 @@ class _ArticleListViewState extends State<HomePage> {
           ];
         },
         body: ListView.builder(
-          itemCount: articleData.length,
+          itemCount: articleDataList.length,
           itemBuilder: (context, index) {
-            if (index == articleData.length - 1) {
-              _retrieveArticleData(_pageNumber++);
+            if (index == articleDataList.length - 1) {
+              _retrieveArticleData(++_pageNumber);
               return MyCircularProgressIndicator();
             }
 
             return GestureDetector(
-              child: ListItemWidget(articleData[index]),
+              child: ListItemWidget(articleDataList[index]),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            BrowserWebViewPage(articleData[index].link)));
+                            WebViewPage(articleDataList[index].link)));
               },
             );
           },
@@ -157,34 +145,28 @@ class _ListItemWidgetState extends State<ListItemWidget> {
 
   _ListItemWidgetState(this._article);
 
-    void _collectArticle(int articleId) async {
-    try {
-      print("start _collectArticle");
-
-      var dio = Dio();
-      dio.interceptors.clear();
-      dio.interceptors
-          .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
-        List<String> cookieStringList =
-            SpUtil().getStringList(Constant.cookieListKey);
-        print("cookieStringList = ${cookieStringList.toString()}");
-
-        options.headers[HttpHeaders.cookieHeader] = cookieStringList.toString();
-        cookieStringList.forEach((element) {
-          print("cookieStringList element = $element");
-          options.headers[HttpHeaders.cookieHeader] = element;
+  void _collectArticle(int articleId) async {
+    ApiService().collectArticle(articleId,
+        (CollectArticleBean collectArticleBean) {
+      if (collectArticleBean.errorCode == 0) {
+        setState(() {
+          _article.collect = true;
+          _isCollectedIcon = Icons.favorite;
         });
-        return options;
-      }));
-//      dio.interceptors.add(MyInterceptor());
+      }
+    });
+  }
 
-      Response response = await dio
-          .post("https://www.wanandroid.com/lg/collect/$articleId/json");
-      print("response.data = ${response.data}");
-
-    } catch (e) {
-      print("_collectArticle = $e");
-    }
+  void _uncollectedArticle(int articleId) async {
+    ApiService().uncollectedArticle(articleId,
+        (CollectArticleBean collectArticleBean) {
+      if (collectArticleBean.errorCode == 0) {
+        setState(() {
+          _article.collect = false;
+          _isCollectedIcon = Icons.favorite_border;
+        });
+      }
+    });
   }
 
   @override
@@ -249,7 +231,11 @@ class _ListItemWidgetState extends State<ListItemWidget> {
                 onPressed: () {
                   print(
                       "jereTest print iconButton _article.id = ${_article.id}");
-                  _collectArticle(_article.id);
+                  if (_article.collect) {
+                    _uncollectedArticle(_article.id);
+                  } else {
+                    _collectArticle(_article.id);
+                  }
                 },
               ),
             ),
