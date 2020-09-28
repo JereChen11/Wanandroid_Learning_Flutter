@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/user_bean.dart';
 import 'package:wanandroid_learning_flutter/page/login/login_page.dart';
+import 'package:wanandroid_learning_flutter/page/me/personal_info_page.dart';
+import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
@@ -19,16 +23,15 @@ class _MePageState extends State<MePage> {
     setState(() {
       if (SpUtil().getBool(Constant.isLoginKey) == null ||
           !SpUtil().getBool(Constant.isLoginKey)) {
-        _isLoginStatus = "登入";
+        _isLoginStatus = Strings.LOGIN_CN;
       } else {
-        _isLoginStatus = "登出";
+        _isLoginStatus = Strings.LOGOUT_CN;
       }
     });
   }
 
   @override
   void initState() {
-    print("initstate");
     _reformatLoginStatus();
     super.initState();
   }
@@ -36,10 +39,7 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Stack(
             alignment: AlignmentDirectional.topCenter,
@@ -47,35 +47,48 @@ class _MePageState extends State<MePage> {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 4.5,
-                child: Image(
-                  image: AssetImage("assets/images/landscape.jpg"),
-                  fit: BoxFit.fitWidth,
+                height: MediaQuery.of(context).size.height / 3,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/landscape.jpg"),
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.7), BlendMode.dstATop),
+                      fit: BoxFit.cover),
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height / 4.5 - 60,
+                top: 50,
                 child: GestureDetector(
                   child: Column(
                     children: <Widget>[
                       Container(
-                        width: 120,
-                        height: 120,
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/landscape.jpg"),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
+                        width: 100,
+                        height: 100,
+                        child: SpUtil().getString(Constant.avatarPathTag) ==
+                                null
+                            ? CircleAvatar(
+                                backgroundImage:
+                                    AssetImage("assets/images/landscape.jpg"),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: FileImage(File(SpUtil()
+                                        .getString(Constant.avatarPathTag))),
+                                  ),
+                                ),
+                              ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
                           SpUtil().getString(Constant.usernameTag) == null
-                              ? "username"
+                              ? Strings.USER_NAME_CN
                               : SpUtil().getString(Constant.usernameTag),
-                          style: TextStyle(fontSize: 25, color: Colors.black38),
+                          style: TextStyle(fontSize: 25, color: Colors.white),
                         ),
                       ),
                       Container(
@@ -87,24 +100,27 @@ class _MePageState extends State<MePage> {
                     ],
                   ),
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                    if (SpUtil().getBool(Constant.isLoginKey) == null ||
+                        !SpUtil().getBool(Constant.isLoginKey)) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    } else {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PersonalInfoPage()))
+                          .then((value) => {_reformatLoginStatus()});
+                    }
                   },
                 ),
               ),
             ],
           ),
-          Container(
-            color: Colors.transparent,
-            width: MediaQuery.of(context).size.width,
-            height: 10,
-            margin: EdgeInsets.only(top: 100),
-          ),
           SizedBox(
             height: 20,
           ),
           GestureDetector(
-              child: _MePageItem(Icons.person, _isLoginStatus),
+              child: _mePageItem(Icons.person, _isLoginStatus),
               onTap: () {
                 if (SpUtil().getBool(Constant.isLoginKey) == null ||
                     !SpUtil().getBool(Constant.isLoginKey)) {
@@ -117,11 +133,12 @@ class _MePageState extends State<MePage> {
                 } else {
                   SpUtil().putBool(Constant.isLoginKey, false);
                   SpUtil().remove(Constant.usernameTag);
+                  SpUtil().remove(Constant.avatarPathTag);
                   SpUtil().remove(Constant.cookieListKey);
                   ApiService().logout((UserBean userBean) {
                     if (userBean.errorCode == 0) {
                       Fluttertoast.showToast(
-                          msg: "退出登入", textColor: Colors.black);
+                          msg: Strings.QUIT_LOGIN_CN, textColor: Colors.grey);
                       _reformatLoginStatus();
                     }
                   });
@@ -131,35 +148,24 @@ class _MePageState extends State<MePage> {
       ),
     );
   }
-}
 
-class _MePageItem extends StatelessWidget {
-  IconData _iconData;
-  String _type;
-
-  _MePageItem(IconData iconData, String type) {
-    this._iconData = iconData;
-    this._type = type;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _mePageItem(IconData iconData, String type) {
     return Padding(
       padding: EdgeInsets.only(top: 15, left: 15, right: 15),
       child: Row(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 5, left: 15),
-            child: new Icon(
-              _iconData,
+            child: Icon(
+              iconData,
               size: 30,
             ),
           ),
           Expanded(
-            child: new Padding(
+            child: Padding(
               padding: EdgeInsets.only(top: 5, bottom: 5, left: 20),
               child: Text(
-                _type,
+                type,
                 style: TextStyle(fontSize: 20, color: Colors.black38),
               ),
             ),

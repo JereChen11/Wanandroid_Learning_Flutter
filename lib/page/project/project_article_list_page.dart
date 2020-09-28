@@ -72,7 +72,7 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
           }
 
           return new GestureDetector(
-            child: _ListItemWidget(_articleList[index]),
+            child: _projectArticleListItem(_articleList[index]),
             onTap: () {
               Navigator.push(
                   context,
@@ -86,33 +86,17 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
       ),
     );
   }
-}
 
-class _ListItemWidget extends StatefulWidget {
-  Article _article;
-
-  _ListItemWidget(this._article);
-
-  @override
-  _ListItemWidgetState createState() => _ListItemWidgetState(_article);
-}
-
-class _ListItemWidgetState extends State<_ListItemWidget> {
-  Article _article;
-
-  _ListItemWidgetState(this._article);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
+  Widget _projectArticleListItem(Article article) {
+    return Padding(
       padding: EdgeInsets.all(10),
-      child: new Row(
+      child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Image(
-            image: NetworkImage(_article.envelopePic),
+          Image(
+            image: NetworkImage(article.envelopePic),
             width: 110,
             height: 200,
             alignment: Alignment.center,
@@ -120,13 +104,13 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
           Flexible(
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 5, bottom: 5),
-              child: new Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Text(
-                    _article.title,
+                  Text(
+                    article.title,
                     style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
@@ -134,32 +118,32 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  new Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: Container(
                       height: 130,
                       child: Text(
-                        _article.desc,
+                        article.desc,
                         maxLines: 7,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
-                  new Padding(
+                  Padding(
                     padding: EdgeInsets.only(
                       top: 5,
                     ),
-                    child: new Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        new Text(
-                          _article.author,
+                        Text(
+                          article.author,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        new Expanded(
-                          child: new Container(
-                            child: Text(_article.niceDate),
+                        Expanded(
+                          child: Container(
+                            child: Text(article.niceDate),
                             alignment: Alignment.center,
                           ),
                         ),
@@ -175,3 +159,91 @@ class _ListItemWidgetState extends State<_ListItemWidget> {
     );
   }
 }
+
+//class _ListItemWidget extends StatefulWidget {
+//  Article _article;
+//
+//  _ListItemWidget(this._article);
+//
+//  @override
+//  _ListItemWidgetState createState() => _ListItemWidgetState(_article);
+//}
+//
+//class _ListItemWidgetState extends State<_ListItemWidget> {
+//  Article _article;
+//
+//  _ListItemWidgetState(this._article);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return new Padding(
+//      padding: EdgeInsets.all(10),
+//      child: new Row(
+//        mainAxisSize: MainAxisSize.max,
+//        mainAxisAlignment: MainAxisAlignment.start,
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        children: <Widget>[
+//          new Image(
+//            image: NetworkImage(_article.envelopePic),
+//            width: 110,
+//            height: 200,
+//            alignment: Alignment.center,
+//          ),
+//          Flexible(
+//            child: Padding(
+//              padding: EdgeInsets.only(left: 10, right: 5, bottom: 5),
+//              child: new Column(
+//                mainAxisSize: MainAxisSize.max,
+//                mainAxisAlignment: MainAxisAlignment.start,
+//                crossAxisAlignment: CrossAxisAlignment.start,
+//                children: <Widget>[
+//                  new Text(
+//                    _article.title,
+//                    style: TextStyle(
+//                        fontSize: 15,
+//                        color: Colors.black,
+//                        fontWeight: FontWeight.bold),
+//                    maxLines: 2,
+//                    overflow: TextOverflow.ellipsis,
+//                  ),
+//                  new Padding(
+//                    padding: EdgeInsets.only(top: 5),
+//                    child: Container(
+//                      height: 130,
+//                      child: Text(
+//                        _article.desc,
+//                        maxLines: 7,
+//                        overflow: TextOverflow.ellipsis,
+//                      ),
+//                    ),
+//                  ),
+//                  new Padding(
+//                    padding: EdgeInsets.only(
+//                      top: 5,
+//                    ),
+//                    child: new Row(
+//                      mainAxisSize: MainAxisSize.max,
+//                      mainAxisAlignment: MainAxisAlignment.center,
+//                      children: <Widget>[
+//                        new Text(
+//                          _article.author,
+//                          style: TextStyle(fontWeight: FontWeight.bold),
+//                        ),
+//                        new Expanded(
+//                          child: new Container(
+//                            child: Text(_article.niceDate),
+//                            alignment: Alignment.center,
+//                          ),
+//                        ),
+//                      ],
+//                    ),
+//                  ),
+//                ],
+//              ),
+//            ),
+//          )
+//        ],
+//      ),
+//    );
+//  }
+//}

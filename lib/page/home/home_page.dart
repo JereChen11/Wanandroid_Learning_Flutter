@@ -8,11 +8,11 @@ import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
 import 'package:wanandroid_learning_flutter/model/collect_article_bean.dart';
 import 'package:wanandroid_learning_flutter/res/dimens.dart';
-import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
+import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
 
-import '../web_view_page.dart';
 import '../login/login_page.dart';
+import '../web_view_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -153,6 +153,9 @@ class _ListItemWidgetState extends State<ListItemWidget> {
           _article.collect = true;
           _isCollectedIcon = Icons.favorite;
         });
+      } else if (collectArticleBean.errorCode == -1001) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       }
     });
   }

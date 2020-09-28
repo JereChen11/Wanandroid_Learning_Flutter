@@ -2,15 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wanandroid_learning_flutter/res/strings.dart';
-import 'package:wanandroid_learning_flutter/res/text_styles.dart';
 import 'package:wanandroid_learning_flutter/page/home/home_page.dart';
 import 'package:wanandroid_learning_flutter/page/knowledge_system/knowledge_system_page.dart';
 import 'package:wanandroid_learning_flutter/page/me/me_page.dart';
 import 'package:wanandroid_learning_flutter/page/project/project_page.dart';
 import 'package:wanandroid_learning_flutter/page/we_chat/we_chat_page.dart';
 import 'package:wanandroid_learning_flutter/res/colours.dart';
-import 'package:wanandroid_learning_flutter/utils/constant.dart';
+import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
 
 void main() async {
@@ -33,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WanAnd_Flu',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -89,126 +87,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
 //      appBar: _appBar[_currentIndex],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: GestureDetector(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 100,
-                      height: 100,
-                      child: SpUtil().getString(Constant.avatarPathTag) == null
-                          ? CircleAvatar(
-                              backgroundImage:
-                                  AssetImage("assets/images/landscape.jpg"),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: FileImage(File(SpUtil()
-                                      .getString(Constant.avatarPathTag))),
-                                ),
-                              ),
-                            ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Text(
-                        SpUtil().getString(Constant.usernameTag) == null
-                            ? "username"
-                            : SpUtil().getString(Constant.usernameTag),
-                        style: TextStyle(fontSize: 25, color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                onTap: () {
-//                  Navigator.push(context,
-//                      MaterialPageRoute(builder: (context) => ProfilePage()));
-                },
-              ),
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                image: new DecorationImage(
-                    image: AssetImage("assets/images/landscape.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.7), BlendMode.dstATop),
-                    fit: BoxFit.cover),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                Strings.HOME_CN,
-                style: TextStyles.size18AndBoldText,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                Strings.PROJECT_CN,
-                style: TextStyles.size18AndBoldText,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                Strings.WE_CHAT_CN,
-                style: TextStyles.size18AndBoldText,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 2;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                Strings.KNOWLEDGE_SYSTEM_CN,
-                style: TextStyles.size18AndBoldText,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 3;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                Strings.ME_CN,
-                style: TextStyles.size18AndBoldText,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 4;
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(

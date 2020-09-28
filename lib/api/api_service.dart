@@ -5,6 +5,9 @@ import 'package:wanandroid_learning_flutter/api/dio_util.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/article_category_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
+import 'package:wanandroid_learning_flutter/model/coin_bean.dart';
+import 'package:wanandroid_learning_flutter/model/coin_list_bean.dart';
+import 'package:wanandroid_learning_flutter/model/coin_rank_bean.dart';
 import 'package:wanandroid_learning_flutter/model/collect_article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/user_bean.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
@@ -95,5 +98,22 @@ class ApiService {
     print("cookieStringList = $cookieStringList");
     SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
     callback(UserBean.fromJson(json.decode(response.data)));
+  }
+
+  void getPersonalCoinData(Function callback) async {
+    Response response = await DioUtil().get("$BASE_URL/lg/coin/userinfo/json");
+    callback(CoinBean.fromJson(json.decode(response.data)));
+  }
+
+  void getPersonalCoinListData(int pageNumber, Function callback) async {
+    Response response =
+        await DioUtil().get("$BASE_URL/lg/coin/list/$pageNumber/json");
+    callback(CoinListBean.fromJson(json.decode(response.data)));
+  }
+
+  void getCoinRankData(int pageNumber, Function callback) async {
+    Response response =
+        await DioUtil().get("$BASE_URL/coin/rank/$pageNumber/json");
+    callback(CoinRankBean.fromJson(json.decode(response.data)));
   }
 }

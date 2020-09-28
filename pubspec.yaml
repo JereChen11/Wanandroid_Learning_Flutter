@@ -33,6 +33,9 @@ dependencies:
   webview_flutter: ^0.3.22+1
   fluttertoast: ^7.0.2
   shared_preferences: ^0.5.8
+  #拍照
+  image_picker: ^0.6.7+4
+  path_provider: ^1.6.11
 
 dev_dependencies:
   flutter_test:
