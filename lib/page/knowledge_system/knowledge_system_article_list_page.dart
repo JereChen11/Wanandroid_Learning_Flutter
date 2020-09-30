@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
-import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/page/home/home_page.dart';
+import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
 
 import '../web_view_page.dart';
@@ -58,38 +58,40 @@ class _KnowledgeSystemArticleListPageState
         title: Text(_titleName),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            if (index == articleList.length - 1) {
-              if (!_isLoadAllArticles) {
-                _retrieveKnowledgeSystemArticle(++_pageNumber);
-                return MyCircularProgressIndicator();
-              } else {
-                return Container(
-                  padding: EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  child: Text(
-                    Strings.IS_LOAD_ALL_ARTICLE_CN,
-                  ),
-                );
-              }
-            } else {
-              return GestureDetector(
-                child: ListItemWidget(articleList[index]),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              WebViewPage(articleList[index].link)));
+      body: (articleList.length == 0)
+          ? Center(child: MyCircularProgressIndicator())
+          : SafeArea(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  if (index == articleList.length - 1) {
+                    if (!_isLoadAllArticles) {
+                      _retrieveKnowledgeSystemArticle(++_pageNumber);
+                      return MyCircularProgressIndicator();
+                    } else {
+                      return Container(
+                        padding: EdgeInsets.all(5),
+                        alignment: Alignment.center,
+                        child: Text(
+                          Strings.IS_LOAD_ALL_ARTICLE_CN,
+                        ),
+                      );
+                    }
+                  } else {
+                    return GestureDetector(
+                      child: ListItemWidget(articleList[index]),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    WebViewPage(articleList[index].link)));
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-          itemCount: articleList.length,
-        ),
-      ),
+                itemCount: articleList.length,
+              ),
+            ),
     );
   }
 }

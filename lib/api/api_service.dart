@@ -9,6 +9,7 @@ import 'package:wanandroid_learning_flutter/model/coin_bean.dart';
 import 'package:wanandroid_learning_flutter/model/coin_list_bean.dart';
 import 'package:wanandroid_learning_flutter/model/coin_rank_bean.dart';
 import 'package:wanandroid_learning_flutter/model/collect_article_bean.dart';
+import 'package:wanandroid_learning_flutter/model/search_hot_key_bean.dart';
 import 'package:wanandroid_learning_flutter/model/user_bean.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
 import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
@@ -115,5 +116,15 @@ class ApiService {
     Response response =
         await DioUtil().get("$BASE_URL/coin/rank/$pageNumber/json");
     callback(CoinRankBean.fromJson(json.decode(response.data)));
+  }
+
+  void getSearchHotKey(Function callback) async {
+    Response response = await DioUtil().get("$BASE_URL/hotkey/json");
+    callback(SearchHotKeyBean.fromJson(json.decode(response.data)));
+  }
+
+  void search(int pageNumber, String key, Function callback) async {
+    Response response = await DioUtil().post("$BASE_URL/article/query/$pageNumber}/json?k=$key");
+    callback(ArticleBean.fromJson(json.decode(response.data)));
   }
 }

@@ -48,8 +48,6 @@ class BottomNavigationWidget extends StatefulWidget {
 }
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
-  final _bottomNavigationBarColor = Colors.white;
-  final _bottomNavigationBarTitleColor = Colors.white;
   int _currentIndex = 0;
 
   final List<Widget> _children = [
@@ -60,87 +58,54 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
     MePage(),
   ];
 
-  final List<Widget> _appBar = [
-    AppBar(
-      centerTitle: true,
-      title: Text(Strings.HOME_CN),
-    ),
-    AppBar(
-      centerTitle: true,
-      title: Text(Strings.PROJECT_CN),
-    ),
-    AppBar(
-      centerTitle: true,
-      title: Text(Strings.PROJECT_CN),
-    ),
-    AppBar(
-      centerTitle: true,
-      title: Text(Strings.KNOWLEDGE_SYSTEM_CN),
-    ),
-    AppBar(
-      centerTitle: true,
-      title: Text(Strings.ME_CN),
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: _appBar[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: _bottomNavigationBarColor,
             ),
             title: Text(
               Strings.HOME_CN,
-              style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.menu,
-              color: _bottomNavigationBarColor,
+              Icons.category,
             ),
             title: Text(
               Strings.PROJECT_CN,
-              style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.web,
-              color: _bottomNavigationBarColor,
+              Icons.chat,
             ),
             title: Text(
               Strings.WE_CHAT_CN,
-              style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.live_tv,
-              color: _bottomNavigationBarColor,
+              Icons.settings_system_daydream,
             ),
             title: Text(
               Strings.KNOWLEDGE_SYSTEM_CN,
-              style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.accessibility,
-              color: _bottomNavigationBarColor,
             ),
             title: Text(
               Strings.ME_CN,
-              style: TextStyle(color: _bottomNavigationBarTitleColor),
             ),
           ),
         ],
-        selectedItemColor: Colours.app_theme,
+        selectedItemColor: Colours.app_theme.withOpacity(0.5),
+        unselectedItemColor: Colors.white,
         selectedLabelStyle: TextStyle(color: Colours.app_theme),
         currentIndex: _currentIndex,
         onTap: (int index) {

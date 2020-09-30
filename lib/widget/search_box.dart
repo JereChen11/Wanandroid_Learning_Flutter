@@ -1,38 +1,46 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wanandroid_learning_flutter/res/dimens.dart';
 
 class SearchBox extends StatelessWidget {
   const SearchBox({
     Key key,
     this.onChanged,
+    this.controller,
   }) : super(key: key);
 
   final ValueChanged onChanged;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 80,
-      height: 30,
-      margin: EdgeInsets.only(
-          left: Dimens.default_padding, right: Dimens.default_padding),
+      width: MediaQuery.of(context).size.width - 100,
+      height: 40,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(35),
       ),
       child: TextField(
         onChanged: onChanged,
-        style: TextStyle(color: Colors.white, fontSize: Dimens.default_size_sp),
+        controller: controller,
+        style: TextStyle(color: Colors.white, fontSize: 15),
         autofocus: false,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: EdgeInsets.only(bottom: 5),
-          prefixIcon: Icon(Icons.search),
-          hintText: 'Search',
-          hintStyle:
-              TextStyle(color: Colors.white, fontSize: Dimens.default_size_sp),
+          hintText: '动画',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 15, ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.clear, color: Colors.white,),
+            onPressed: () {
+              controller.clear();
+            },
+          ),
         ),
       ),
     );

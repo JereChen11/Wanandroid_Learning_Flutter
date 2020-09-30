@@ -7,6 +7,7 @@ import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/article_bean.dart';
 import 'package:wanandroid_learning_flutter/model/banner_data.dart';
 import 'package:wanandroid_learning_flutter/model/collect_article_bean.dart';
+import 'package:wanandroid_learning_flutter/page/search/search_page.dart';
 import 'package:wanandroid_learning_flutter/res/dimens.dart';
 import 'package:wanandroid_learning_flutter/widget/banner.dart';
 import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicator.dart';
@@ -97,7 +98,7 @@ class _ArticleListViewState extends State<HomePage> {
                     ),
                   ),
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage())),
+                      MaterialPageRoute(builder: (context) => SearchPage())),
                 ),
                 background: bannerView(bannerDataList),
               ),

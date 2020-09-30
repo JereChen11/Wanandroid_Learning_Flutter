@@ -102,8 +102,14 @@ class _MePageState extends State<MePage> {
                   onTap: () {
                     if (SpUtil().getBool(Constant.isLoginKey) == null ||
                         !SpUtil().getBool(Constant.isLoginKey)) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()))
+                          .then((value) => {
+                                if (value == "loginSuccessful")
+                                  _reformatLoginStatus(),
+                              });
                     } else {
                       Navigator.push(
                               context,
