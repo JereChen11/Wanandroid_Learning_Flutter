@@ -40,6 +40,13 @@ class ApiService {
     callback(CollectArticleBean.fromJson(json.decode(response.data)));
   }
 
+  void getCollectionArticleList(int pageNumber, Function callback) async {
+    Response response =
+        await DioUtil().get("$BASE_URL/lg/collect/list/$pageNumber/json");
+    print(response);
+    callback(ArticleBean.fromJson(json.decode(response.data)));
+  }
+
   void getProjectArticleCategory(Function callback) async {
     Response response = await DioUtil().get("$BASE_URL/project/tree/json");
     callback(ArticleCategoryBean.fromJson(json.decode(response.data)));
@@ -124,7 +131,8 @@ class ApiService {
   }
 
   void search(int pageNumber, String key, Function callback) async {
-    Response response = await DioUtil().post("$BASE_URL/article/query/$pageNumber}/json?k=$key");
+    Response response = await DioUtil()
+        .post("$BASE_URL/article/query/$pageNumber}/json?k=$key");
     callback(ArticleBean.fromJson(json.decode(response.data)));
   }
 }

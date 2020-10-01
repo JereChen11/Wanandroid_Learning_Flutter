@@ -8,6 +8,7 @@ class Strings {
   static const String GET_BOTTOM_CN = "到底啦~";
 
   ///me_page
+  static const String COLLECT_CN = "我的收藏";
   static const String LOGIN_CN = "登入";
   static const String QUIT_LOGIN_CN = "退出登入";
   static const String LOGOUT_CN = "登出";

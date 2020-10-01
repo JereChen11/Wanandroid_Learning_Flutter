@@ -17,15 +17,11 @@ class _SearchPageState extends State<SearchPage> {
 
   void _getSearchHotKey() {
     ApiService().getSearchHotKey((SearchHotKeyBean searchHotKeyBean) {
-
-
       var commentWidgets = List<Widget>();
       for (var hotKey in searchHotKeyBean.hotKey) {
         _hotKeyWidget.add(Chip(label: Text(hotKey.name)));
       }
-      setState(() {
-
-      });
+      setState(() {});
 //      setState(() {
 //        _hotKeyList.addAll(searchHotKeyBean.hotKey);
 //      });
@@ -33,7 +29,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _search(int pageNumber, String key) {
-    ApiService().search(pageNumber, key, (ArticleBean articleBean){
+    ApiService().search(pageNumber, key, (ArticleBean articleBean) {
       setState(() {
         _searchArticleList.addAll(articleBean.data.articles);
       });

@@ -76,7 +76,7 @@ class _WeChatArticleListPageState extends State<WeChatArticleListPage> {
               }
             } else {
               return GestureDetector(
-                child: ListItemWidget(_articleList[index]),
+                child: ArticleListItemWidget(_articleList[index]),
                 onTap: () {
                   Navigator.push(
                       context,

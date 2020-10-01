@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wanandroid_learning_flutter/api/api_service.dart';
 import 'package:wanandroid_learning_flutter/model/user_bean.dart';
 import 'package:wanandroid_learning_flutter/page/login/login_page.dart';
+import 'package:wanandroid_learning_flutter/page/me/collect_page.dart';
 import 'package:wanandroid_learning_flutter/page/me/personal_info_page.dart';
 import 'package:wanandroid_learning_flutter/res/strings.dart';
 import 'package:wanandroid_learning_flutter/utils/constant.dart';
@@ -124,6 +125,13 @@ class _MePageState extends State<MePage> {
           ),
           SizedBox(
             height: 20,
+          ),
+          GestureDetector(
+            child: _mePageItem(Icons.favorite_border, Strings.COLLECT_CN),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CollectPage()));
+            },
           ),
           GestureDetector(
               child: _mePageItem(Icons.person, _isLoginStatus),

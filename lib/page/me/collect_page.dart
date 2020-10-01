@@ -8,41 +8,26 @@ import 'package:wanandroid_learning_flutter/widget/my_circular_progress_indicato
 
 import '../web_view_page.dart';
 
-class KnowledgeSystemArticleListPage extends StatefulWidget {
-  String titleName;
-  int categoryId;
-
-  KnowledgeSystemArticleListPage(this.titleName, this.categoryId);
-
+class CollectPage extends StatefulWidget {
   @override
-  _KnowledgeSystemArticleListPageState createState() =>
-      _KnowledgeSystemArticleListPageState(titleName, categoryId);
+  _CollectPageState createState() => _CollectPageState();
 }
 
-class _KnowledgeSystemArticleListPageState
-    extends State<KnowledgeSystemArticleListPage> {
-  int _pageNumber = 0;
-  int _categoryId;
-  bool _isLoadAllArticles = false;
-  String _titleName;
+class _CollectPageState extends State<CollectPage> {
   List<Article> _articleList = List();
+  int _pageNumber = 0;
+  bool _isLoadAllArticles = false;
 
-  _KnowledgeSystemArticleListPageState(this._titleName, this._categoryId);
-
-  @override
-  void initState() {
-    print("_titleName = $_titleName, _categoryId = $_categoryId");
-    _retrieveKnowledgeSystemArticle(_pageNumber);
-    super.initState();
-  }
-
-  void _retrieveKnowledgeSystemArticle(int pageNumber) async {
-    ApiService().getKnowledgeSystemArticleData(pageNumber, _categoryId,
+  void _getCollectionArticleListData(int pageNumber) {
+    ApiService().getCollectionArticleList(pageNumber,
         (ArticleBean articleBean) {
       setState(() {
         if (articleBean.data != null) {
           _isLoadAllArticles = articleBean.data.over;
-          _articleList.addAll(articleBean.data.articles);
+          for (var article in articleBean.data.articles) {
+            article.collect = true;
+            _articleList.add(article);
+          }
         }
         if (_isLoadAllArticles) {
           _articleList.add(null); //用于展示所有文章都以被加载
@@ -52,10 +37,16 @@ class _KnowledgeSystemArticleListPageState
   }
 
   @override
+  void initState() {
+    _getCollectionArticleListData(_pageNumber);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titleName),
+        title: Text(Strings.COLLECT_CN),
         centerTitle: true,
       ),
       body: (_articleList.length == 0)
@@ -65,7 +56,7 @@ class _KnowledgeSystemArticleListPageState
                 itemBuilder: (context, index) {
                   if (index == _articleList.length - 1) {
                     if (!_isLoadAllArticles) {
-                      _retrieveKnowledgeSystemArticle(++_pageNumber);
+                      _getCollectionArticleListData(++_pageNumber);
                       return MyCircularProgressIndicator();
                     } else {
                       return Container(

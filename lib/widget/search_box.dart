@@ -30,13 +30,19 @@ class SearchBox extends StatelessWidget {
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: '动画',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 15, ),
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 15,
+          ),
           prefixIcon: Icon(
             Icons.search,
             color: Colors.white,
           ),
           suffixIcon: IconButton(
-            icon: Icon(Icons.clear, color: Colors.white,),
+            icon: Icon(
+              Icons.clear,
+              color: Colors.white,
+            ),
             onPressed: () {
               controller.clear();
             },

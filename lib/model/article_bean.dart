@@ -88,6 +88,7 @@ class Article {
   String niceDate;
   String niceShareDate;
   String origin;
+  int originId;
   String prefix;
   String projectLink;
   int publishTime;
@@ -122,6 +123,7 @@ class Article {
       this.niceDate,
       this.niceShareDate,
       this.origin,
+      this.originId,
       this.prefix,
       this.projectLink,
       this.publishTime,
@@ -156,6 +158,7 @@ class Article {
     niceDate = json['niceDate'];
     niceShareDate = json['niceShareDate'];
     origin = json['origin'];
+    originId = json['originId'];
     prefix = json['prefix'];
     projectLink = json['projectLink'];
     publishTime = json['publishTime'];
@@ -197,6 +200,7 @@ class Article {
     data['niceDate'] = this.niceDate;
     data['niceShareDate'] = this.niceShareDate;
     data['origin'] = this.origin;
+    data['originId'] = this.originId;
     data['prefix'] = this.prefix;
     data['projectLink'] = this.projectLink;
     data['publishTime'] = this.publishTime;

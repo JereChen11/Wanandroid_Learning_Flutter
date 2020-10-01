@@ -88,12 +88,19 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
   }
 
   Widget _projectArticleListItem(Article article) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.all(10),
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey, offset: Offset(2.0, 2.0), blurRadius: 4.0)
+          ]),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Image(
             image: NetworkImage(article.envelopePic),
@@ -101,13 +108,12 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
             height: 200,
             alignment: Alignment.center,
           ),
-          Flexible(
+          Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 5, bottom: 5),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     article.title,
@@ -124,11 +130,18 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
                       height: 130,
                       child: Text(
                         article.desc,
-                        maxLines: 7,
+                        maxLines: 6,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
+//                  Expanded(
+//                    child: Text(
+//                      article.desc,
+//                      maxLines: 6,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: 5,
@@ -139,8 +152,8 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
                       children: <Widget>[
                         Text(
                           article.author.isEmpty
-                              ? article.author
-                              : article.shareUser,
+                              ? article.shareUser
+                              : article.author,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Expanded(

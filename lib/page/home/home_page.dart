@@ -114,7 +114,7 @@ class _ArticleListViewState extends State<HomePage> {
             }
 
             return GestureDetector(
-              child: ListItemWidget(articleDataList[index]),
+              child: ArticleListItemWidget(articleDataList[index]),
               onTap: () {
                 Navigator.push(
                     context,
@@ -131,20 +131,21 @@ class _ArticleListViewState extends State<HomePage> {
   }
 }
 
-class ListItemWidget extends StatefulWidget {
+class ArticleListItemWidget extends StatefulWidget {
   Article article;
 
-  ListItemWidget(this.article);
+  ArticleListItemWidget(this.article);
 
   @override
-  _ListItemWidgetState createState() => _ListItemWidgetState(article);
+  _ArticleListItemWidgetState createState() =>
+      _ArticleListItemWidgetState(article);
 }
 
-class _ListItemWidgetState extends State<ListItemWidget> {
+class _ArticleListItemWidgetState extends State<ArticleListItemWidget> {
   Article _article;
   IconData _isCollectedIcon = Icons.favorite_border;
 
-  _ListItemWidgetState(this._article);
+  _ArticleListItemWidgetState(this._article);
 
   void _collectArticle(int articleId) async {
     ApiService().collectArticle(articleId,
@@ -183,74 +184,74 @@ class _ListItemWidgetState extends State<ListItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 10, top: 12, bottom: 10),
-          child: Text(
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey, offset: Offset(2.0, 2.0), blurRadius: 4.0)
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
             _article.title,
-            style: TextStyle(fontSize: 15, color: Colors.black),
+            style: TextStyle(fontSize: 16, color: Colors.black),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10, top: 10),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: 60,
-                  ),
-                  child: Text(
-                    _article.author.isEmpty
-                        ? _article.shareUser
-                        : _article.author,
-                    style: TextStyle(fontSize: 15, color: Colors.black),
-                  ),
-                )),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 15, top: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 5),
                 child: Text(
-                  _article.niceDate,
-                  style: TextStyle(fontSize: 15, color: Colors.black),
+                  _article.author.isEmpty
+                      ? (_article.shareUser == null
+                          ? "UnKnow"
+                          : _article.shareUser)
+                      : _article.author,
+                  style: TextStyle(fontSize: 15, color: Colors.grey),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: IconButton(
-                alignment: Alignment.topCenter,
-                icon: Icon(
-                  _isCollectedIcon,
-                  color: Colors.red,
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    _article.niceDate,
+                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                  ),
                 ),
-                onPressed: () {
-                  print(
-                      "jereTest print iconButton _article.id = ${_article.id}");
-                  if (_article.collect) {
-                    _uncollectedArticle(_article.id);
-                  } else {
-                    _collectArticle(_article.id);
-                  }
-                },
               ),
-            ),
-          ],
-        ),
-        Container(
-          color: Colors.grey,
-          width: MediaQuery.of(context).size.width,
-          height: 1,
-        ),
-      ],
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: IconButton(
+                  alignment: Alignment.center,
+                  icon: Icon(
+                    _isCollectedIcon,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    print(
+                        "jereTest print iconButton _article.id = ${_article.id}");
+                    if (_article.collect) {
+                      _uncollectedArticle(_article.originId == null
+                          ? _article.id
+                          : _article.originId);
+                    } else {
+                      _collectArticle(_article.id);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
