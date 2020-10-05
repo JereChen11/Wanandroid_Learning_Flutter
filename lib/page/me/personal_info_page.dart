@@ -266,7 +266,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             FlatButton(
               child: Text("取消"),
               onPressed: () => Navigator.of(context).pop(), // 关闭对话框
-//              onPressed: () => Navigator.pop(context, "loginSuccessful");, // 关闭对话框
             ),
             FlatButton(
               child: Text("确认"),

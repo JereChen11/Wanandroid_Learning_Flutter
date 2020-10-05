@@ -130,9 +130,10 @@ class ApiService {
     callback(SearchHotKeyBean.fromJson(json.decode(response.data)));
   }
 
-  void search(int pageNumber, String key, Function callback) async {
+  void search(
+      int pageNumber, Map<String, dynamic> data, Function callback) async {
     Response response = await DioUtil()
-        .post("$BASE_URL/article/query/$pageNumber}/json?k=$key");
+        .post("$BASE_URL/article/query/$pageNumber/json?", data: data);
     callback(ArticleBean.fromJson(json.decode(response.data)));
   }
 }

@@ -38,13 +38,6 @@ class _WeChatArticleListPageState extends State<WeChatArticleListPage> {
         if (_isLoadAllArticles) {
           _articleList.add(null); //用于展示所有文章都以被加载
         }
-//        if (articleBean.errorCode == 0 &&
-//            articleBean.data.articles.length > 0) {
-//          _articleList.addAll(articleBean.data.articles);
-//          _isLoadAllArticles = false;
-//        } else {
-//          _isLoadAllArticles = true;
-//        }
       });
     });
   }
