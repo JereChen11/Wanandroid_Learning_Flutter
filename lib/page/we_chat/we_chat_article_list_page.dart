@@ -23,7 +23,7 @@ class _WeChatArticleListPageState extends State<WeChatArticleListPage> {
 
   _WeChatArticleListPageState(this._bloggerId);
 
-  List<Article> _articleList = List();
+  List<Article> _articleList = [];
   bool _isLoadAllArticles = false;
   int _pageNumber = 0;
 

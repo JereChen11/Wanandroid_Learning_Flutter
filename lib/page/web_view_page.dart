@@ -16,8 +16,19 @@ class WebViewPage extends StatelessWidget {
       body: SafeArea(
         child: WebView(
           initialUrl: _link,
+          javascriptChannels: <JavascriptChannel>[_jsChannel(context)].toSet(),
+          javascriptMode: JavascriptMode.unrestricted,
         ),
       ),
     );
+  }
+
+  ///这里定义Js调用Flutter本地方法的桥
+  JavascriptChannel _jsChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: "finish",
+        onMessageReceived: (JavascriptMessage message) {
+          print("js call flutter finish function");
+        });
   }
 }

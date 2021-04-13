@@ -21,8 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _ArticleListViewState extends State<HomePage> {
-  List<Article> articleDataList = new List();
-  List<BannerBean> bannerDataList = new List();
+  List<Article> articleDataList = [];
+  List<BannerBean> bannerDataList = <BannerBean>[];
   int _pageNumber = 0;
 
   void _retrieveBannerData() async {

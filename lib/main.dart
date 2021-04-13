@@ -67,41 +67,31 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             icon: Icon(
               Icons.home,
             ),
-            title: Text(
-              Strings.HOME_CN,
-            ),
+            label: Strings.HOME_CN,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.category,
             ),
-            title: Text(
-              Strings.PROJECT_CN,
-            ),
+            label: Strings.PROJECT_CN,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.chat,
             ),
-            title: Text(
-              Strings.WE_CHAT_CN,
-            ),
+            label: Strings.WE_CHAT_CN,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.settings_system_daydream,
             ),
-            title: Text(
-              Strings.KNOWLEDGE_SYSTEM_CN,
-            ),
+            label: Strings.KNOWLEDGE_SYSTEM_CN,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.accessibility,
             ),
-            title: Text(
-              Strings.ME_CN,
-            ),
+            label: Strings.ME_CN,
           ),
         ],
         selectedItemColor: Colours.app_theme.withOpacity(0.5),
