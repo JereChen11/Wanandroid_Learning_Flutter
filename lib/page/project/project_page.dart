@@ -11,8 +11,8 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  var _tabList = List<Tab>();
-  var _tabBarView = List<Widget>();
+  var _tabList = <Tab>[];
+  var _tabBarView = <Widget>[];
 
   @override
   void initState() {

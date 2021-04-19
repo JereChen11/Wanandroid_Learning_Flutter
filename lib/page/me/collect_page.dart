@@ -14,7 +14,7 @@ class CollectPage extends StatefulWidget {
 }
 
 class _CollectPageState extends State<CollectPage> {
-  List<Article> _articleList = List();
+  List<Article> _articleList = [];
   int _pageNumber = 0;
   bool _isLoadAllArticles = false;
 

@@ -13,8 +13,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _searchTeController = TextEditingController();
-  List<Widget> _hotKeyWidget = List();
-  List<Widget> _localSearchHistoryWidgetList = List();
+  List<Widget> _hotKeyWidget = [];
+  List<Widget> _localSearchHistoryWidgetList = [];
 
   void _getSearchHotKey() {
     ApiService().getSearchHotKey((SearchHotKeyBean searchHotKeyBean) {

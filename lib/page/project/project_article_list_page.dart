@@ -135,13 +135,6 @@ class _ProjectArticleListPageState extends State<ProjectArticleListPage> {
                       ),
                     ),
                   ),
-//                  Expanded(
-//                    child: Text(
-//                      article.desc,
-//                      maxLines: 6,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: 5,

@@ -23,7 +23,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
   int _pageNumber = 0;
   bool _isLoadAllArticles = false;
   String _searchKeyName;
-  List<Article> _articleList = List();
+  List<Article> _articleList = [];
 
   _SearchResultPageState(this._searchKeyName);
 
@@ -50,7 +50,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
     List<String> localSearchHistoryList =
         SpUtil().getStringList(Constant.localSearchHistoryKey);
     if (localSearchHistoryList == null) {
-      localSearchHistoryList = List();
+      localSearchHistoryList = [];
     }
     if (!localSearchHistoryList.contains(_searchKeyName)) {
       localSearchHistoryList.add(_searchKeyName);

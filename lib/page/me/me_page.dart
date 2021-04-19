@@ -44,7 +44,6 @@ class _MePageState extends State<MePage> {
         children: <Widget>[
           Stack(
             alignment: AlignmentDirectional.topCenter,
-            overflow: Overflow.visible,
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,

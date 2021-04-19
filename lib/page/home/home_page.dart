@@ -100,7 +100,7 @@ class _ArticleListViewState extends State<HomePage> {
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SearchPage())),
                 ),
-                background: bannerView(bannerDataList),
+                background: bannerView(context, bannerDataList),
               ),
             ),
           ];
@@ -256,8 +256,8 @@ class _ArticleListItemWidgetState extends State<ArticleListItemWidget> {
   }
 }
 
-Widget bannerView(List<BannerBean> bannerDataList) {
-  List<String> bannerUrlList = new List();
+Widget bannerView(BuildContext context, List<BannerBean> bannerDataList) {
+  List<String> bannerUrlList = [];
   bannerDataList.forEach((element) {
     bannerUrlList.add(element.imagePath);
   });
@@ -272,6 +272,10 @@ Widget bannerView(List<BannerBean> bannerDataList) {
     },
     onBannerClickListener: (index, data) {
       print(index);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => WebViewPage(bannerDataList[index].url)));
     },
   );
 }

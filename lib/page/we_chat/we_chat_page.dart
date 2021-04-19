@@ -11,8 +11,8 @@ class WeChatPage extends StatefulWidget {
 }
 
 class _WeChatPageState extends State<WeChatPage> {
-  var _tabList = List<Tab>();
-  var _tabBarView = List<Widget>();
+  var _tabList = <Tab>[];
+  var _tabBarView = <Widget>[];
 
   @override
   void initState() {
