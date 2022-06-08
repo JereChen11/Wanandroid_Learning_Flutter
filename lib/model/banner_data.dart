@@ -7,7 +7,7 @@ class BannerData {
 
   BannerData.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      bannerBean = new List<BannerBean>();
+      bannerBean = <BannerBean>[];
       json['data'].forEach((v) {
         bannerBean.add(new BannerBean.fromJson(v));
       });

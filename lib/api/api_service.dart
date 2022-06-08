@@ -90,7 +90,6 @@ class ApiService {
         await DioUtil().post("$BASE_URL/user/login?", data: data);
     List<String> cookieStringList = response.headers["Set-Cookie"];
     print("cookieStringList = $cookieStringList");
-    SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
     callback(UserBean.fromJson(json.decode(response.data)));
   }
 
@@ -104,7 +103,6 @@ class ApiService {
         await DioUtil().post("$BASE_URL/user/register?", data: data);
     List<String> cookieStringList = response.headers["Set-Cookie"];
     print("cookieStringList = $cookieStringList");
-    SpUtil().putStringList(Constant.cookieListKey, cookieStringList);
     callback(UserBean.fromJson(json.decode(response.data)));
   }
 

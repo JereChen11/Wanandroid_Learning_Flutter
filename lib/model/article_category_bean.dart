@@ -7,7 +7,7 @@ class ArticleCategoryBean {
 
   ArticleCategoryBean.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      category = new List<Category>();
+      category = <Category>[];
       json['data'].forEach((v) {
         category.add(new Category.fromJson(v));
       });
@@ -49,7 +49,7 @@ class Category {
 
   Category.fromJson(Map<String, dynamic> json) {
     if (json['children'] != null) {
-      children = new List<Children>();
+      children = <Children>[];
       json['children'].forEach((v) {
         children.add(new Children.fromJson(v));
       });

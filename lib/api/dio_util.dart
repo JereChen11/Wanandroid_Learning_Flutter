@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:wanandroid_learning_flutter/api/api_service.dart';
-import 'package:wanandroid_learning_flutter/utils/constant.dart';
-import 'package:wanandroid_learning_flutter/utils/sp_util.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 
 class DioUtil {
   // 单例公开访问点
@@ -41,25 +41,8 @@ class DioUtil {
     );
 
     dio = Dio(options);
-
-    //添加拦截器
-    dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) {
-      //add cookie before request
-      Map<String, String> map = new Map();
-      List<String> cookies = SpUtil().getStringList(Constant.cookieListKey);
-      map["Cookie"] = cookies.toString();
-      options.headers = map;
-      return options;
-    }, onResponse: (Response response) {
-      print("响应之前");
-      // Do something with response data
-      return response;
-    }, onError: (DioError e) {
-      print("错误之前");
-      // Do something with response error
-      return e;
-    }));
+    //添加拦截器，添加Cookie
+    dio.interceptors.add(CookieManager(CookieJar()));
   }
 
   /*
@@ -124,19 +107,19 @@ class DioUtil {
    * error统一处理
    */
   void formatError(DioError e) {
-    if (e.type == DioErrorType.CONNECT_TIMEOUT) {
+    if (e.type == DioErrorType.connectTimeout) {
       // It occurs when url is opened timeout.
       print("连接超时");
-    } else if (e.type == DioErrorType.SEND_TIMEOUT) {
+    } else if (e.type == DioErrorType.sendTimeout) {
       // It occurs when url is sent timeout.
       print("请求超时");
-    } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
+    } else if (e.type == DioErrorType.receiveTimeout) {
       //It occurs when receiving timeout
       print("响应超时");
-    } else if (e.type == DioErrorType.RESPONSE) {
+    } else if (e.type == DioErrorType.response) {
       // When the server response, but with a incorrect status, such as 404, 503...
       print("出现异常");
-    } else if (e.type == DioErrorType.CANCEL) {
+    } else if (e.type == DioErrorType.cancel) {
       // When the request is cancelled, dio will throw a error with this type.
       print("请求取消");
     } else {

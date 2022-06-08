@@ -43,7 +43,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
-      articles = new List<Article>();
+      articles = <Article>[];
       json['datas'].forEach((v) {
         articles.add(new Article.fromJson(v));
       });
@@ -169,7 +169,7 @@ class Article {
     superChapterId = json['superChapterId'];
     superChapterName = json['superChapterName'];
     if (json['tags'] != null) {
-      tags = new List<Tags>();
+      tags = <Tags>[];
       json['tags'].forEach((v) {
         tags.add(new Tags.fromJson(v));
       });

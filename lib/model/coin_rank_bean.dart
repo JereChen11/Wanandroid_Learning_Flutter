@@ -43,7 +43,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
-      ranks = new List<Rank>();
+      ranks = <Rank>[];
       json['datas'].forEach((v) {
         ranks.add(new Rank.fromJson(v));
       });

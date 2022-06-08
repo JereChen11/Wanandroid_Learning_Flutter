@@ -147,7 +147,6 @@ class _MePageState extends State<MePage> {
                   SpUtil().putBool(Constant.isLoginKey, false);
                   SpUtil().remove(Constant.usernameTag);
                   SpUtil().remove(Constant.avatarPathTag);
-                  SpUtil().remove(Constant.cookieListKey);
                   ApiService().logout((UserBean userBean) {
                     if (userBean.errorCode == 0) {
                       Fluttertoast.showToast(

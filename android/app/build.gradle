@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         applicationId "com.wanandroid.learning.wanandroid_learning_flutter"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

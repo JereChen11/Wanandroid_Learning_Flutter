@@ -7,7 +7,7 @@ class SearchHotKeyBean {
 
   SearchHotKeyBean.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      hotKey = new List<HotKey>();
+      hotKey = <HotKey>[];
       json['data'].forEach((v) {
         hotKey.add(new HotKey.fromJson(v));
       });

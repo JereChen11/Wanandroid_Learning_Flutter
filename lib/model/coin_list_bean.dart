@@ -43,7 +43,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
-      coinOrigins = new List<CoinOrigin>();
+      coinOrigins = <CoinOrigin>[];
       json['datas'].forEach((v) {
         coinOrigins.add(new CoinOrigin.fromJson(v));
       });
